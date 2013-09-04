@@ -26,4 +26,4 @@ v0.5
 Features:
 - database 1mh/1d
 - document about interfaces/design interface  2mh/2d
-- improved interface (maybe some javascript?) 2mh/ 
+- improved interface (maybe some javascript?) 4mh/2d 
