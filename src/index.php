@@ -15,13 +15,13 @@ if(!file_exists('pages.php') && !is_readable('pages.php')){
 
 $pages=require_once 'pages.php';
 
+$page='home';
+
 if(isset($_GET['show'])){
     if(array_key_exists($_GET['show'], $pages))
         $page=$_GET['show'];
     else
         $page='notfound';
-}else{
-    $page='home';
 }
 
 $menu=build_menu_from_pages($pages, $page);
