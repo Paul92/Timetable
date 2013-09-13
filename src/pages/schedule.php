@@ -7,6 +7,8 @@ if(!$DB){
 
 $schedule = mysqli_query($DB, "SELECT * FROM schedule");
 
+var_dump($schedule);
+
 if(isset($_POST['submit'])){
     while($day = mysqli_fetch_array($schedule)){
         $startH = $day['dayName']."_startHour";
