@@ -1,9 +1,12 @@
 <?php
-$DB = mysqli_connect('localhost' ,'mysql' ,'123456' ,'timetable');
 
-if(!$DB){
-    exit('Connect error '.mysqli_connect_errno());
+if(!file_exists('database.php') || !is_readable('database.php')){
+    exit(DATABASE_MODULE_NOT_FOUND);
 }
+
+require_once('database.php');
+
+$DB = connect();
 
 $schedule = mysqli_query($DB, "SELECT * FROM schedule");
 
