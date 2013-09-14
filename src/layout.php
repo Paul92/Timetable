@@ -31,7 +31,7 @@
     </div>
 
     <div id="content">
-        <?php include __DIR__.'/pages/'.$content.'.php'; ?>
+        <?php include __DIR__.'/pages/'.$content; ?>
     </div>
 </body>
 
