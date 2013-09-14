@@ -8,9 +8,9 @@
  *
  *      Returns a mysqli object used for database connection.
  *
- * disconnect(mysqli db);
+ * void disconnect);
  *
- *      Disconnects db database.
+ *      Disconnects database.
  *
  */
 
@@ -22,4 +22,8 @@ function connect(){
         exit('Connect error '.mysqli_connect_errno());
 
     return $DB;
+}
+
+function disconnect(){
+    mysqli_close(connect());
 }
