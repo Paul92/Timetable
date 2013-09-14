@@ -11,6 +11,6 @@ return array(
     ),
     'schedule' => array(
         'title' => 'Schedule',
-        'content' => 'schedule.php'
+        'content' => 'schedule/schedule.php'
     )
 );
