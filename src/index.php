@@ -2,6 +2,7 @@
 
 const CORE_FUNCTIONS_NOT_FOUND = "ERROR: functions.php not found\n";
 const CORE_PAGES_NOT_FOUND = "ERROR: pages.php not found\n";
+const DATABASE_MODULE_NOT_FOUND = "ERROR: database.php not found\n";
 
 if(!file_exists('functions.php') && !is_readable('functions.php')){
     exit(CORE_FUNCTIONS_NOT_FOUND);
@@ -19,7 +20,7 @@ $page='home';
 
 if(isset($_GET['show'])){
     if(array_key_exists($_GET['show'], $pages))
-        $page=$_GET['show'];
+        $page=$pages[$_GET['show']]['content'];
     else
         $page='notfound';
 }
