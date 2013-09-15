@@ -12,5 +12,9 @@ return array(
     'schedule' => array(
         'title' => 'Schedule',
         'content' => 'schedule/schedule.php'
+    ),
+    'courses' => array(
+        'title' => 'Courses',
+        'content' => 'courses/courses.php'
     )
 );
