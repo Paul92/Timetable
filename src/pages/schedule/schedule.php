@@ -17,4 +17,4 @@ while($day = mysqli_fetch_array($schedule)){
 
 </table>
 <input type="submit" name="submit" value="Submit"/>
-
+</form>

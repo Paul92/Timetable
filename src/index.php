@@ -16,7 +16,7 @@ if(!file_exists('pages.php') && !is_readable('pages.php')){
 
 $pages=require_once 'pages.php';
 
-$page='home';
+$page='home.php';
 
 if(isset($_GET['show'])){
     if(array_key_exists($_GET['show'], $pages))
