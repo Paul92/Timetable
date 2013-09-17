@@ -13,7 +13,7 @@ return array(
     ),
     'schedule' => array(
         'title' => 'Schedule',
-        'content' => 'schedule/schedule.php',
+        'content' => 'schedule/schedule_VL.php',
         'show' => TRUE
     ),
     'courses' => array(
