@@ -18,7 +18,7 @@ return array(
     ),
     'courses' => array(
         'title' => 'Courses',
-        'content' => 'courses/courses.php',
+        'content' => 'courses/courses_VL.php',
         'show' => TRUE
     ),
     'notfound' => array(
