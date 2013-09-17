@@ -7,19 +7,16 @@ const DATABASE_MODULE_NOT_FOUND = "ERROR: database.php not found\n";
 if(!file_exists('functions.php') && !is_readable('functions.php')){
     exit(CORE_FUNCTIONS_NOT_FOUND);
 }
-
 require_once 'functions.php';
 
 if(!file_exists('pages.php') && !is_readable('pages.php')){
     exit(CORE_PAGES_NOT_FOUND);
 }
-
 $pages=require_once 'pages.php';
 
 if(!file_exists('database.php') || !is_readable('database.php')){
     exit(DATABASE_NOT_FOUND);
 }
-
 require_once 'database.php';
 
 $DB = connect();
