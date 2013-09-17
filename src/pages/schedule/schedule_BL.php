@@ -1,13 +1,5 @@
 <?php
 
-if(!file_exists('database.php') || !is_readable('database.php')){
-    exit(DATABASE_MODULE_NOT_FOUND);
-}
-
-require_once('database.php');
-
-$DB = connect();
-
 $schedule = mysqli_query($DB, "SELECT * FROM schedule");
 
 if(isset($_POST['submit'])){
