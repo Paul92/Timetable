@@ -16,20 +16,30 @@ if(!file_exists('pages.php') && !is_readable('pages.php')){
 
 $pages=require_once 'pages.php';
 
-$page='home.php';
+if(!file_exists('database.php') || !is_readable('database.php')){
+    exit(DATABASE_NOT_FOUND);
+}
+
+require_once 'database.php';
+
+$DB = connect();
+
+$page='home';
 
 if(isset($_GET['show'])){
     if(array_key_exists($_GET['show'], $pages))
-        $page=$pages[$_GET['show']]['content'];
+        $page=$_GET['show'];
     else
         $page='notfound';
 }
 
 $menu=build_menu_from_pages($pages, $page);
 
-$page_and_menu=array(
+$vars=array(
     'menu' => $menu, 
-    'content' => $page
+    'content' => $pages[$page]['content'],
+    'title' => $pages[$page]['title'],
+    'DB' => $DB
 );
 
-render('layout.php', $page_and_menu);
+render('layout.php', $vars);
