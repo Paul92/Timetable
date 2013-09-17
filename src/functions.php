@@ -14,7 +14,7 @@ function render($template, $vars=NULL){
 function build_menu_from_pages($pages, $currentPage){
     $r='<ul>';
     foreach($pages as $pagename => $metadata){
-        if($currentPage!=$pagename)
+        if($currentPage!=$pagename && $pages[$pagename]['show'] == TRUE)
             $r.='<li><a href="?show='.$pagename.'">'.$metadata['title'].'</a></li>';
     }
     return $r.'</ul>';
