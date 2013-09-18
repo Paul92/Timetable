@@ -1,5 +1,11 @@
 <?php
+/**
+ * Controller
+ */
 
+/**
+ * Controller constants:
+ */
 const CORE_FUNCTIONS_NOT_FOUND = "ERROR: functions.php not found\n";
 const CORE_PAGES_NOT_FOUND = "ERROR: pages.php not found\n";
 const DATABASE_MODULE_NOT_FOUND = "ERROR: database.php not found\n";
@@ -19,8 +25,14 @@ if(!file_exists('database.php') || !is_readable('database.php')){
 }
 require_once 'database.php';
 
+/**
+ * Database variable
+ */
 $DB = connect();
 
+/**
+ * Page to be shown. Default is home
+ */
 $page='home';
 
 if(isset($_GET['show'])){
@@ -30,8 +42,14 @@ if(isset($_GET['show'])){
         $page='notfound';
 }
 
+/**
+ * $menu holds the menu shown on page
+ */
 $menu=build_menu_from_pages($pages, $page);
 
+/**
+ * This array is used to pass variables to page modules
+ */
 $vars=array(
     'menu' => $menu, 
     'content' => $pages[$page]['content'],
