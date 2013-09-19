@@ -11,20 +11,26 @@
  * PASS - database password
  * DB_NAME - database name
  */
-const HOST 'localhost'
-const USER 'mysql'
-const PASS '123456'
-const DB_NAME 'timetable'
+// TODO: unused constants
+const HOST = 'localhost';
+const USER = 'mysql';
+const PASS = '123456';
+const DB_NAME = 'timetable';
 
 /**
  * Connect to database
- *
+ * 
+ * @param str $host database host
+ * @param str $user database user
+ * @param str $dbName database name
+ * 
  * @return mysqli DB
  */
-function connect(){
-    static $DB;
-    $DB = mysqli_connect('localhost', 'mysql', '123456', 'timetable');
-    if (!$DB) {
+function connect($host, $user, $pass, $dbName){
+    static $DB = null; // TODO: should be named $dbLink
+    // TODO: check that function parameters are the expected type
+    $DB = mysqli_connect($host, $user, $pass, $dbName);
+    if (is_null($DB)) {
         exit('Connect error '.mysqli_connect_errno());
     }
     return $DB;
