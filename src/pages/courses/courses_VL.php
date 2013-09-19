@@ -8,7 +8,7 @@
 while($course = mysqli_fetch_array($courses)){
     echo "<tr>\n";
     echo "<td> Course ".$course['courseId'].': <a href="pages/courses/addSubject.php?courseName='.$course['courseName'];
-    echo '&courseId='.$course['courseId'].'>'.$course['courseName']."</a></td>\n";
+    echo '&amp;courseId='.$course['courseId'].'">'.$course['courseName']."</a></td>\n";
     $subjects = mysqli_query($DB, "SELECT id FROM subjects WHERE courseID='".$course['courseId']."'");
     if(/*mysqli_num_rows*/($subjects)){
         echo "<table>\n";
