@@ -11,10 +11,10 @@
  * PASS - database password
  * DB_NAME - database name
  */
-const HOST 'localhost'
-const USER 'mysql'
-const PASS '123456'
-const DB_NAME 'timetable'
+const    HOST = 'localhost';
+const    USER = 'mysql';
+const    PASS = '123456';
+const DB_NAME = 'timetable';
 
 /**
  * Connect to database
