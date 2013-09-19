@@ -1,4 +1,4 @@
-<?php include 'BL.php'; ?>
+<?php include 'schedule_BL.php'; ?>
 
 <form method="POST">
 
