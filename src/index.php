@@ -10,6 +10,8 @@ const CORE_FUNCTIONS_NOT_FOUND = "ERROR: functions.php not found\n";
 const CORE_PAGES_NOT_FOUND = "ERROR: pages.php not found\n";
 const DATABASE_MODULE_NOT_FOUND = "ERROR: database.php not found\n";
 
+const DATABASE_MODULE = 'database.php';
+
 if (!file_exists('functions.php') && !is_readable('functions.php')) {
     exit(CORE_FUNCTIONS_NOT_FOUND);
 }
