@@ -1,11 +1,8 @@
 <?php
-
-if(!file_exists('database.php') || !is_readable('database.php'){
-    exit(DATABASE_MODULE_NOT_FOUND);
-}
-
-require_once('database.php');
-
+/**
+ * Submodule for course addition. It handles addition form and database
+ * update
+ */
 if(isset($_POST['subjectName'])){
     $query = "INSERT INTO subjects (subjectName, courseId) VALUES (";
     $query.= $_POST['subjectName']." ,".$_POST['courseId'];
