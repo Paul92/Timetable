@@ -25,5 +25,10 @@ return array(
         'title' => 'Not Found',
         'content' => 'notfound.php',
         'show' => FALSE
+    ),
+    'addSubject' => array(
+        'title' => 'Add Subject',
+        'content' => 'courses/addSubject.php',
+        'show' => FALSE
     )
 );
