@@ -12,11 +12,10 @@ if(isset($_POST['subjectName'])){
 
 
 if(isset($_GET['courseName'])){
-    echo "<form method='GET'>\n";
     echo "<p>Add a subject to ".$_GET['courseName']." course</p>\n";
-    echo "<form>\n";
+    echo "<form method='GET'>\n";
     echo "<label for='subjectName'>Subject Name: </label>\n";
-    echo "<input type='hidden' name='courseId' value='".$_GET['courseId']."/>\n";
+    echo "<input type='hidden' name='courseId' value='".$_GET['courseId']."'/>\n";
     echo "<input type='text' id='subjectName' name='subjectName' />\n";
     echo "<input type='submit' name='submit' value='Submit' />\n";
     echo "</form>";
