@@ -18,16 +18,18 @@ const DB_NAME = 'timetable';
 
 /**
  * Connect to database
- *
+ * 
  * @return mysqli DB
  */
 function connect(){
-    static $DB;
-    $DB = mysqli_connect('localhost', 'mysql', '123456', 'timetable');
-    if (!$DB) {
+    //TODO: think about calling mysqli_connect at every function call. The 
+    //database should be the same
+    static $dbLink = NULL;
+    $dbLink = mysqli_connect(HOST, USER, PASS, DB_NAME);
+    if (is_null($dbLink)) {
         exit('Connect error '.mysqli_connect_errno());
     }
-    return $DB;
+    return $dbLink;
 }
 
 /**
