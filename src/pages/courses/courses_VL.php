@@ -11,10 +11,11 @@ while($course = mysqli_fetch_array($courses)){
     echo '&amp;courseId=', $course['courseId'], '">', $course['courseName'], "</a></td></tr>\n";
     $subjects = mysqli_query($DB, "SELECT subjectName FROM subjects WHERE courseId='".$course['courseId']."'");
     if($subjects){
-        echo "<tr><td><table style='margin-left: 25px'>\n";
+        echo "<tr><td><table border='1' style='margin-left: 25px'>\n";
         while($subject = mysqli_fetch_array($subjects)){
             echo '<tr>';
-            echo '<td>', $subject['subjectName'], '</td>';
+            echo '<td style="width:300px">', $subject['subjectName'], '</td>';
+            echo '<td> <button type="submit" name="delete[]" value="', $subject['subjectName'], '"/>Delete</button></td>';
             echo "</tr>\n";
         }
         echo "</table></td></tr>\n";
