@@ -30,5 +30,15 @@ return array(
         'title' => 'Add Subject',
         'content' => 'courses/addSubject.php',
         'show' => FALSE
+    ),
+    'addTeacher' => array(
+        'title' => 'Add Teacher',
+        'content' => 'courses/addTeacher.php',
+        'show' => FALSE
+    ),
+    'teachers' => array(
+        'title' => 'Teachers',
+        'content' => 'teachers/teachers_VL.php',
+        'show' => TRUE
     )
 );
