@@ -13,8 +13,23 @@ if(isset($_POST['submit'])){
 }
 
 if(isset($_POST['delete'])){
-    $query = "DELETE FROM subjects WHERE subjectName='".$_POST['delete'][0]."';";
+    $query = "DELETE FROM teachersToSubject WHERE subjectId=".$_POST['delete'][0].";";
     mysqli_query($DB, $query);
+    $query = "DELETE FROM subjects WHERE subjectId=".$_POST['delete'][0].";";
+    mysqli_query($DB, $query);
+}
+
+if(isset($_POST['deleteCourse'])){
+    foreach($_POST['deleteCourse'] as $deleteCourse){
+        $subjects = mysqli_query($DB, "SELECT subjectId FROM subjects WHERE courseId=".$deleteCourse.';');
+        while($subject = mysqli_fetch_array($subjects)){
+            $query = "DELETE FROM teachersToSubject WHERE=".$subject['subjectId'].";";
+            mysqli_query($DB, $query);
+            $query = "DELETE FROM subjects WHERE subjectId=".$subject['subjectId'].";";
+            mysqli_query($DB, $query);
+        }
+        mysqli_query($DB, "DELETE FROM courses WHERE courseId=".$deleteCourse.";");
+    }
 }
 
 /**
