@@ -14,4 +14,20 @@ if(isset($_POST['submit'])){
     mysqli_query($DB, $query);
 }
 
+if(isset($_POST['deleteTeacher'])){
+    foreach($_POST['deleteTeacher'] as $deleteTeacher){
+        $query = "DELETE FROM teachersToSubject WHERE teacherId=".$deleteTeacher.";";
+        mysqli_query($DB, $query);
+        $query = "DELETE FROM teachers WHERE teacherId=".$deleteTeacher.";";
+        mysqli_query($DB, $query);
+    }
+}
+
+if(isset($_POST['removeSubject'])){
+    foreach($_POST['removeSubject'] as $removeSubject){
+        $query = "DELETE FROM teachersToSubject WHERE subjectId=".$removeSubject.";";
+        mysqli_query($DB, $query);
+    }
+}
+
 $teachers = mysqli_query($DB, "SELECT * FROM teachers");
