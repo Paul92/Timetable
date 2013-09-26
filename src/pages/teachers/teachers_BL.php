@@ -9,9 +9,6 @@
  * Constants:
  */
 
-if (!file_exists(DATABASE_MODULE) || !is_readable(DATABASE_MODULE)) {
-    exit(DATABASE_MODULE_NOT_FOUND);
-}
 require_once(DATABASE_MODULE);
 
 $DB = connect();

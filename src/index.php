@@ -22,6 +22,10 @@ if (!file_exists('pages.php') || !is_readable('pages.php')) {
 }
 $pages=require_once 'pages.php';
 
+if (!file_exists('database.php') || !is_readable('database.php')) {
+    exit(DATABASE_MODULE_NOT_FOUND);
+}
+
 /**
  * Page to be shown. Default is home
  */
