@@ -3,7 +3,14 @@
  * Submodule for addition teachers to a course. It handles addition form and database
  * update
  */
-if(isset($_POST['submit']) && isset($_POST['teachers']) && isset($_POST['subjectId'])){
+
+if (!file_exists(DATABASE_MODULE) || !is_readable(DATABASE_MODULE)) {
+    exit(DATABASE_MODULE_NOT_FOUND);
+}
+
+$DB = connect();
+
+if (isset($_POST['submit']) && isset($_POST['teachers']) && isset($_POST['subjectId'])) {
     foreach($_POST['teachers'] as $teacher){
         $query = 'INSERT INTO teachersToSubject (subjectId, teacherId) VALUES (';
         $query.= $_POST['subjectId'].', '.$teacher.');';
@@ -13,13 +20,13 @@ if(isset($_POST['submit']) && isset($_POST['teachers']) && isset($_POST['subject
 }
 
 
-if(isset($_GET['subjectName'])){
+if (isset($_GET['subjectName'])) {
     echo "<p>Add a teacher to ".$_GET['subjectName']." subject</p>\n";
     echo "<p>Available teachers</p>";
     echo '<form method="POST">';
     echo '<table>';
     $teachers = mysqli_query($DB, "SELECT * FROM teachers");
-    while($teacher = mysqli_fetch_array($teachers)){
+    while ($teacher = mysqli_fetch_array($teachers)) {
         echo '<tr><td> Teacher ', $teacher['teacherName'];
         echo '<input type="checkbox" name="teachers[]" value="', $teacher['teacherId'], '"/>';
         echo '</td></tr>';
@@ -28,6 +35,6 @@ if(isset($_GET['subjectName'])){
     echo '<input type="hidden" name="subjectId" value="', $_GET['subjectId'], '"/>';
     echo '<input type="submit" name="submit" value="Submit"/>';
     echo '</form>';
-}else{
+} else {
     echo "ERROR: CourseName not set\n";
 }
