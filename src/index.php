@@ -22,16 +22,6 @@ if (!file_exists('pages.php') && !is_readable('pages.php')) {
 }
 $pages=require_once 'pages.php';
 
-if (!file_exists('database.php') || !is_readable('database.php')) {
-    exit(DATABASE_NOT_FOUND);
-}
-require_once 'database.php';
-
-/**
- * Database variable
- */
-$DB = connect();
-
 /**
  * Page to be shown. Default is home
  */
@@ -57,7 +47,6 @@ $vars = array(
     'menu' => $menu, 
     'content' => $pages[$page]['content'],
     'title' => $pages[$page]['title'],
-    'DB' => $DB
 );
 
 render('layout.php', $vars);
