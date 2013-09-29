@@ -19,7 +19,8 @@ return array(
     'courses' => array(
         'title' => 'Courses',
         'content' => 'courses/courses_VL.php',
-        'show' => TRUE
+        'show' => TRUE,
+        'model' => 'pages/courses/courses_BL.php'
     ),
     'notfound' => array(
         'title' => 'Not Found',
@@ -28,13 +29,15 @@ return array(
     ),
     'addSubject' => array(
         'title' => 'Add Subject',
-        'content' => 'courses/addSubject.php',
-        'show' => FALSE
+        'content' => 'courses/addSubject_VL.php',
+        'show' => FALSE,
+        'model' => 'pages/courses/addSubject_BL.php'
     ),
-    'addTeacher' => array(
-        'title' => 'Add Teacher',
-        'content' => 'courses/addTeacher.php',
-        'show' => FALSE
+    'subjectSettings' => array(
+        'title' => 'Subject Settings',
+        'content' => 'courses/subjectSettings_VL.php',
+        'show' => FALSE,
+        'model' => 'pages/courses/subjectSettings_BL.php'
     ),
     'teachers' => array(
         'title' => 'Teachers',
