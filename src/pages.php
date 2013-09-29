@@ -14,7 +14,8 @@ return array(
     'schedule' => array(
         'title' => 'Schedule',
         'content' => 'schedule/schedule_VL.php',
-        'show' => TRUE
+        'show' => TRUE,
+        'model' => 'pages/schedule/schedule_BL.php'
     ),
     'courses' => array(
         'title' => 'Courses',

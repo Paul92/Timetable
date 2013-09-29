@@ -40,9 +40,9 @@ function updateSchedule($startH, $endH, $dayId){
 }
 
 /**
- * Variabile to hold schedule table
+ * Variabile to pass data to VL
  */
-$schedule = getSchedule();
+$data = array();
 
 if (isset($_POST['submit'])) {
     while ($day = mysqli_fetch_array($schedule)) {
@@ -50,6 +50,9 @@ if (isset($_POST['submit'])) {
         $endH   = $_POST[$day['dayName']."_endHour"];
         updateSchedule($startH, $endH, $dayId);
     }
-    $schedule = getSchedule();
 }
+
+$data['schedule'] = getSchedule();
+
+return $data;
 
