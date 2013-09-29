@@ -6,11 +6,11 @@
 foreach($data['courses'] as $course){
     echo "<tr>\n";
     echo '<td> Course ', $course['courseId'], ':';
-    echo '<a href="?show=addSubject&amp;courseName=', $course['courseName'];
+    echo '<a href="?show=addSubject';
     echo '&amp;courseId=', $course['courseId'], '">', $course['courseName'];
     echo "</a></td>\n";
 
-    echo '<td> <button type="submit" name="deleteCourse[]"';
+    echo '<td> <button type="submit" name="deleteCourse[]" ';
     echo 'value="', $course['courseId'], '">Delete</button></td>', "\n";
     echo "</tr>\n";
 
@@ -18,8 +18,7 @@ foreach($data['courses'] as $course){
         echo "<tr><td><table border='1' style='margin-left: 25px'>\n";
         echo "<tr>\n";
         echo '<td style="width:300px">';
-        echo '<a href="?show=addTeacher&amp;subjectName=';
-        echo $subject['subjectName'];
+        echo '<a href="?show=subjectSettings';
         echo '&amp;subjectId=', $subject['subjectId'], '">';
         echo $subject['subjectName'], '</a></td>', "\n";
         echo '<td> <button type="submit" name="delete[]" value="';
