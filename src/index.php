@@ -9,6 +9,7 @@
 const CORE_FUNCTIONS_NOT_FOUND = "ERROR: functions.php not found\n";
 const CORE_PAGES_NOT_FOUND = "ERROR: pages.php not found\n";
 const DATABASE_MODULE_NOT_FOUND = "ERROR: database.php not found\n";
+const MODEL_NOT_FOUND = "ERROR: model not found\n";
 
 const DATABASE_MODULE = 'database.php';
 
@@ -39,6 +40,11 @@ if (isset($_GET['show'])) {
     }
 }
 
+if (!file_exists($pages[$page]['model']) || !is_readable($pages[$page]['model'])){
+    exit(MODEL_NOT_FOUND);
+}
+$data = require_once $pages[$page]['model'];
+
 /**
  * $menu holds the menu shown on page
  */
@@ -48,9 +54,10 @@ $menu = build_menu_from_pages($pages, $page);
  * This array is used to pass variables to page modules
  */
 $vars = array(
-    'menu' => $menu, 
+    'menu'    => $menu, 
     'content' => $pages[$page]['content'],
-    'title' => $pages[$page]['title'],
+    'title'   => $pages[$page]['title'],
+    'data'    => $data
 );
 
 render('layout.php', $vars);
