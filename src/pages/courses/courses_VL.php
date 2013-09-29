@@ -3,7 +3,6 @@
 <table>
 
 <?php
-var_dump($data);
 foreach($data['courses'] as $course){
     echo "<tr>\n";
     echo '<td> Course ', $course['courseId'], ':';
