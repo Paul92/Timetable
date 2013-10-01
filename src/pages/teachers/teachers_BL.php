@@ -20,7 +20,8 @@ if (isset($_POST['submit'])) {
 
 if (isset($_POST['deleteTeacher'])) {
     foreach ($_POST['deleteTeacher'] as $deleteTeacher) {
-        $query = "DELETE FROM teachersToSubject WHERE teacherId=".$deleteTeacher.";";
+        $query = "DELETE FROM teachersToSubject WHERE teacherId=";
+        $query.= $deleteTeacher.";";
         mysqli_query($DB, $query);
         $query = "DELETE FROM teachers WHERE teacherId=".$deleteTeacher.";";
         mysqli_query($DB, $query);
@@ -29,10 +30,25 @@ if (isset($_POST['deleteTeacher'])) {
 
 if (isset($_POST['removeSubject'])) {
     foreach ($_POST['removeSubject'] as $removeSubject) {
-        $query = "DELETE FROM teachersToSubject WHERE subjectId=".$removeSubject.";";
+        $query = "DELETE FROM teachersToSubject WHERE subjectId=";
+        $query.= $removeSubject.";";
         mysqli_query($DB, $query);
     }
 }
 
 $teachers = mysqli_query($DB, "SELECT * FROM teachers");
 
+$data['teachers'] = mysqli_fetch_all($teachers, MYSQLI_ASSOC);
+foreach ($data['teachers'] as $teacher) {
+    $query = "SELECT * FROM teachersToSubject WHERE teacherId=";
+    $query.= $teacher['teacherId'].';';
+    $subjectsTaught = mysqli_query($DB, $query);
+    $data[$teacher['teacherId']] = array();
+    while ($subjectTaught = mysqli_fetch_array($subjectsTaught)) {
+        $query = "Select * FROM subjects WHERE subjectId=";
+        $query.= $subjectTaught['subjectId'];
+        $data[$teacher['teacherId']][] = mysqli_query($DB, $query);
+    }
+}
+
+return $data;
