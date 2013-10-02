@@ -38,6 +38,9 @@ if (isset($_POST['submit']) && isset($_POST['subjectId'])) {
             mysqli_query($DB, $query);
         }
     }
+    $query = "UPDATE subjects SET hours=".$_POST['hours'];
+    $query.= " WHERE subjectId=".$subject['subjectId'].";";
+    mysqli_query($DB, $query);
     header('Location: ?show=courses');
 }
 
