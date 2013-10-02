@@ -28,12 +28,10 @@ if (isset($_POST['deleteTeacher'])) {
     }
 }
 
-if (isset($_POST['removeSubject'])) {
-    foreach ($_POST['removeSubject'] as $removeSubject) {
-        $query = "DELETE FROM teachersToSubject WHERE subjectId=";
-        $query.= $removeSubject.";";
-        mysqli_query($DB, $query);
-    }
+if (isset($_POST['removeSubject']) && isset($_POST['teacherId'])) {
+    $query = "DELETE FROM teachersToSubject WHERE subjectId=";
+    $query.= $_POST['removeSubject']." AND teacherId=".$_POST['teacherId'].";";
+    mysqli_query($DB, $query);
 }
 
 $teachers = mysqli_query($DB, "SELECT * FROM teachers");
