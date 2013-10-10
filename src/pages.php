@@ -9,9 +9,9 @@ return array(
     ),
     'timetable' => array(
         'title' => 'Timetable',
-        'content' => 'timetable_VL.php',
+        'content' => 'timetable/timetable_VL.php',
         'show' => TRUE,
-        'model' => 'timetable_BL.php'
+        'model' => 'pages/timetable/timetable_BL.php'
     ),
     'schedule' => array(
         'title' => 'Schedule',
