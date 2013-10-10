@@ -4,12 +4,14 @@ return array(
     'home' => array(
         'title' => 'Bine ai venit',
         'content' => 'home.php',
-        'show' => TRUE
+        'show' => TRUE,
+        'model' => 'pages/home_BL.php'
     ),
     'timetable' => array(
         'title' => 'Timetable',
-        'content' => 'timetable.php',
-        'show' => TRUE
+        'content' => 'timetable_VL.php',
+        'show' => TRUE,
+        'model' => 'timetable_BL.php'
     ),
     'schedule' => array(
         'title' => 'Schedule',
@@ -43,6 +45,7 @@ return array(
     'teachers' => array(
         'title' => 'Teachers',
         'content' => 'teachers/teachers_VL.php',
-        'show' => TRUE
+        'show' => TRUE,
+        'model' => 'pages/teachers/teachers_BL.php'
     )
 );
