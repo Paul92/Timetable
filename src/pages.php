@@ -3,9 +3,9 @@
 return array(
     'home' => array(
         'title' => 'Bine ai venit',
-        'content' => 'home.php',
+        'content' => 'home/home_VL.php',
         'show' => TRUE,
-        'model' => 'pages/home_BL.php'
+        'model' => 'pages/home/home_BL.php'
     ),
     'timetable' => array(
         'title' => 'Timetable',
