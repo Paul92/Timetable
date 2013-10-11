@@ -56,8 +56,8 @@ $data = array(
     'teacherPreference' => array(),
     'daySlots'          => array(),
     'correlativeHours'  => FALSE,
-    'errors'            => array()
 );
+$errors = array();
 
 //Subject fetching
 $query = 'SELECT subjectId, hours FROM subjects;';
@@ -84,18 +84,34 @@ foreach($data['subjects'] as $subjectId){
     }
 
     if(empty($subjectTeachers)){
-        $data['errors'][] = 'Subject ' . $subjectId . ' has no teachers';
+        $errors[] = 'Subject ' . $subjectId . ' has no teachers';
     }
     $data['teachers'][] = $subjectTeachers;
 }
 
 //Schedule fetching
-$query = 'SELECT startHour, endHour FROM schedule;';
+$query = 'SELECT * FROM schedule;';
 $schedule = mysqli_query($DB, $query);
 
-//TODO: find a date structure in order to find no of hours in a day
+//TODO: Improve schedule system
+//      A slot may be longer than an hour
 while($day = mysqli_fetch_array($schedule)){
-    var_dump($day);
+    sscanf($day['startHour'], "%d:%d:%d", $startH, $startM, $startS);
+    sscanf($day['endHour'], "%d:%d:%d", $endH, $endM, $endS);
+
+    if($endM != $startM || $endS != $startS){
+        $errors[] = 'Start minute and/or second are not equal with stop minute and/or second on '.$day['dayName'];
+    }
+    if($startH > $endH){
+        $errors[] = 'Start hour after end hour on '.$day['dayName'];
+    }
+
+    $daySlots[] = $endH - $startH;
 }
 
+//TODO: Correlative hours
+
+
+var_dump($errors);
 var_dump($data);
+
