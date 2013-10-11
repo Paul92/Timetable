@@ -1,3 +1,10 @@
+<?php
+if (isset($data['errors'])) {
+    foreach ($data['errors'] as $error) {
+        echo $error, '</br>';
+    }
+}
+?>
 <form method="POST">
 
 <table>

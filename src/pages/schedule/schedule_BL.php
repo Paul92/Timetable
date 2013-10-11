@@ -44,16 +44,30 @@ function updateSchedule($startH, $endH, $dayId){
 }
 
 /**
- * Variabile to pass data to VL
+ * $data - variabile to pass data to VL
+ * $error - variable to pass errors
  */
 $data = array();
+$errors = array();
 
 if (isset($_POST['submit'])) {
-    var_dump($_POST);
     $schedule = getSchedule();
     while ($day = mysqli_fetch_array($schedule)) {
         $startH = $_POST[$day['dayName']."_startHour"];
         $endH   = $_POST[$day['dayName']."_endHour"];
+
+        sscanf($startH, "%d:%d:%d", $sH, $sM, $sS);
+        sscanf($endH, "%d:%d:%d", $eH, $eM, $eS);
+
+        if ($sM != $eM || $sS != $eS) {
+            $errors[] = 'Start/stop minutes and/or seconds are not equal on ' . $day['dayName'];
+            break;
+        }
+        if ($sH >= $eH){
+            $errors[] = 'Start hour is later or equal with end hour on ' . $day['dayName'];
+            break;
+        }
+
         $dayId  = $day['dayId'];
         updateSchedule($startH, $endH, $dayId);
     }
@@ -68,6 +82,6 @@ if (isset($_POST['reset'])) {
 }
 
 $data['schedule'] = getSchedule();
-
+$data['errors'] = $errors;
 return $data;
 
