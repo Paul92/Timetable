@@ -17,7 +17,7 @@
  *       $teachers = array(teacher1, teacher2, ..., teachern),
  *       $teacherPreference = array(preference_teacher1, ..., 
  *                                  preference_teachern),
- *       $noOfSlots = array(mondaySlots, ..., fridaySlots),
+ *       $daySlots = array(mondaySlots, ..., fridaySlots),
  *       bool $correlativeHours,
  * );
  *
@@ -34,7 +34,7 @@
  *  Note: teacher preferences are soft constrains, i.e. they may not be 
  *  fulfilled (they may not be fesable ethier).
  *
- * $noOfSlots represent number of slots in a certain day. Note that I use slots, 
+ * $daySlots represent number of slots in a certain day. Note that I use slots, 
  * not hours, because a day may be divided in slots of 2 hours each, for 
  * example.
  *
@@ -45,3 +45,57 @@
  * before proceeding
  *
  */
+
+require_once(DATABASE_MODULE);
+$DB = connect();
+
+$data = array(
+    'subjects'          => array(),
+    'noOfSlots'         => array(),
+    'teachers'          => array(),
+    'teacherPreference' => array(),
+    'daySlots'          => array(),
+    'correlativeHours'  => FALSE,
+    'errors'            => array()
+);
+
+//Subject fetching
+$query = 'SELECT subjectId, hours FROM subjects;';
+$subjects = mysqli_query($DB, $query);
+while($subject = mysqli_fetch_array($subjects)){
+    $data['subjects'][]  = (int)$subject['subjectId'];
+    $data['noOfSlots'][] = (int)$subject['hours'];
+}
+
+if(empty($data['subject'])){
+    $errors[] = 'No subjects';
+}
+
+
+//Teacher fetching
+foreach($data['subjects'] as $subjectId){
+    $query = 'SELECT teacherId FROM teachersToSubject WHERE subjectId ="';
+    $query.= $subjectId . '";';
+
+    $teachers = mysqli_query($DB, $query);
+    $subjectTeachers = array();
+    while($teacher = mysqli_fetch_array($teachers)){
+        $subjectTeachers[] = $teacher['teacherId'];
+    }
+
+    if(empty($subjectTeachers)){
+        $data['errors'][] = 'Subject ' . $subjectId . ' has no teachers';
+    }
+    $data['teachers'][] = $subjectTeachers;
+}
+
+//Schedule fetching
+$query = 'SELECT startHour, endHour FROM schedule;';
+$schedule = mysqli_query($DB, $query);
+
+//TODO: find a date structure in order to find no of hours in a day
+while($day = mysqli_fetch_array($schedule)){
+    var_dump($day);
+}
+
+var_dump($data);
