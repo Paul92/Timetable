@@ -51,4 +51,13 @@
  *    added to individual's list if it has a smaller mark
  *
  * The evolving process should stop when an acceptable individual is found.
+ *
+ * The timetable data structure:
+ *
+ * $timetable = array(
+ *          $monday = array(slot1, ..., slotn),
+ *          ...
+ *          $friday = array(slot1, ..., slotn)
+ *  );
+ *  , where slot1, ..., slotn represents the subject ID taken in that slot.
  */
