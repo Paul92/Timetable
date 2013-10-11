@@ -62,28 +62,28 @@ $errors = array();
 //Subject fetching
 $query = 'SELECT subjectId, hours FROM subjects;';
 $subjects = mysqli_query($DB, $query);
-while($subject = mysqli_fetch_array($subjects)){
+while ($subject = mysqli_fetch_array($subjects)) {
     $data['subjects'][]  = (int)$subject['subjectId'];
     $data['noOfSlots'][] = (int)$subject['hours'];
 }
 
-if(empty($data['subject'])){
+if (empty($data['subjects'])) {
     $errors[] = 'No subjects';
 }
 
 
 //Teacher fetching
-foreach($data['subjects'] as $subjectId){
+foreach ($data['subjects'] as $subjectId) {
     $query = 'SELECT teacherId FROM teachersToSubject WHERE subjectId ="';
     $query.= $subjectId . '";';
 
     $teachers = mysqli_query($DB, $query);
     $subjectTeachers = array();
-    while($teacher = mysqli_fetch_array($teachers)){
+    while ($teacher = mysqli_fetch_array($teachers)) {
         $subjectTeachers[] = $teacher['teacherId'];
     }
 
-    if(empty($subjectTeachers)){
+    if (empty($subjectTeachers)) {
         $errors[] = 'Subject ' . $subjectId . ' has no teachers';
     }
     $data['teachers'][] = $subjectTeachers;
@@ -93,25 +93,24 @@ foreach($data['subjects'] as $subjectId){
 $query = 'SELECT * FROM schedule;';
 $schedule = mysqli_query($DB, $query);
 
-//TODO: Improve schedule system
-//      A slot may be longer than an hour
-while($day = mysqli_fetch_array($schedule)){
-    sscanf($day['startHour'], "%d:%d:%d", $startH, $startM, $startS);
-    sscanf($day['endHour'], "%d:%d:%d", $endH, $endM, $endS);
+//TODO: A slot may be longer than an hour
+while ($day = mysqli_fetch_array($schedule)) {
+    sscanf($day['startHour'], "%d", $startH);
+    sscanf($day['endHour'], "%d", $endH);
 
-    if($endM != $startM || $endS != $startS){
-        $errors[] = 'Start minute and/or second are not equal with stop minute and/or second on '.$day['dayName'];
-    }
-    if($startH > $endH){
-        $errors[] = 'Start hour after end hour on '.$day['dayName'];
-    }
-
-    $daySlots[] = $endH - $startH;
+    $data['daySlots'][] = $endH - $startH;
 }
 
 //TODO: Correlative hours
 
 
-var_dump($errors);
-var_dump($data);
+
+//Pass data to VL
+if (isset($errors)) {
+    return $errors;
+} else {
+    return "PLACEHOLDER";
+}
+
+
 
