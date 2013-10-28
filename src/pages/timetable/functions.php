@@ -54,10 +54,62 @@
  *
  * The timetable data structure:
  *
- * $timetable = array(
- *          $monday = array(slot1, ..., slotn),
- *          ...
- *          $friday = array(slot1, ..., slotn)
- *  );
+ * $timetable = array(slot1, slot2, ..., slotn);
  *  , where slot1, ..., slotn represents the subject ID taken in that slot.
+ *  the first k slots represents monday slots, where k is the number of slots
+ *  from monday. Simillar for other days. The size of $timetable MUST be equal
+ *  with the number of slots in a week.
+ *
+ * A generation is a array of timetables, each one being an individual.
+ * $generation = array($individual1, ..., $individualn),
+ * where $individualk is a timetable
  */
+
+
+
+/**
+ * mixed generate_individual(mixed $data)
+ *
+ * @param mixed $data - data used for timetable generation, as described in
+ *                      timetable_BL.php
+ *
+ * @return mixed timetable - returns a randomly generated timetable, as 
+ *                           documented at the beginning of this file
+ */
+function generate($data) {
+
+    $timetable = array();
+    foreach ($data['noOfSlots'] as $key => $subjectSlots) {
+        while ($subjectSlots) {
+            $timetable[] = $data['subjects'][$key];
+            $subjectSlots--;
+        }
+    }
+
+    shuffle($timetable);
+
+    return $timetable;
+}
+
+
+/**
+ * mixed generate_generation(mixed $data, int $generationSize)
+ *
+ * @param mixed $data - data used for timetable generation, as described in
+ *                      timetable_BL.php
+ * @param int $generationSize - generation size
+ *
+ * @return mixed generation - returns a randomly generated generation, with
+ *                            generationSize individuals, as documented at
+ *                            the beginning of this file
+ */
+function generate_generation($data, $generationSize) {
+
+    $generation = array();
+    for ($i = 0; $i < $generationSize; $i++) {
+        $generation[] = generate($data);
+    }
+
+    return $generation;
+
+}
