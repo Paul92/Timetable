@@ -49,6 +49,10 @@
 require_once(DATABASE_MODULE);
 $DB = connect();
 
+require_once('pages/timetable/functions.php');
+
+const GENERATION_SIZE = 10;
+
 $data = array(
     'subjects'          => array(),
     'noOfSlots'         => array(),
@@ -102,15 +106,13 @@ while ($day = mysqli_fetch_array($schedule)) {
 }
 
 //TODO: Correlative hours
-
-
+//TODO: Check if there are too many/few slots
+$ret = generate_generation($data, GENERATION_SIZE);
 
 //Pass data to VL
-if (isset($errors)) {
+if (isset($errors) && !empty($errors)) {
     return $errors;
 } else {
-    return "PLACEHOLDER";
+    return $ret;
 }
-
-
 

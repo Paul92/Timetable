@@ -1,8 +1,9 @@
 <?php
 if (isset($errors)) {
+    echo "OK";
     foreach ($errors as $error) {
         echo $error, '</br>';
     }
 }
-?>
-Timetable placeholder
+
+var_dump($data);
