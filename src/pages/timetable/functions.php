@@ -150,10 +150,27 @@ function fitness($data, $individual){
               ($j > 0 && $individual[$i-1] == $individual[$i])){ 
                 $ret[0]++;
             }
+            $hour = $data['startHour'] + $j;
+            switch($data['teacherPreference']){
+                case 0:
+                    if($hour < 8  || $hour > 12)
+                        $ret[1]++;
+                    break;
+                case 1:
+                    if($hour < 12 || $hour > 16)
+                        $ret[1]++;
+                    break;
+                case 2:
+                    if($hour < 16 || $hour > 20)
+                        $ret[1]++;
+                    break;
+                default:
+                    die("Wrong value for teacher preference");
+            }
             $todayTeachers[$slotTeacher] = TRUE;
         }
     }
+
     return $ret;
 }
-            
 
