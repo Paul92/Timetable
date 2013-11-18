@@ -113,3 +113,47 @@ function generate_generation($data, $generationSize) {
     return $generation;
 
 }
+
+/**
+ * mixed fitness(mixed $data, mixed $individual)
+ *
+ * @param mixed $data - data used for timetable generation, as described in
+ *                      timetable_BL.php
+ * @param mixed $individual - the individual for which to compute the fitness
+ *                            value
+ *
+ * @return mixed mark - a mark that shows how good it a certain individual
+ *
+ *
+ *      This function is the most important function for the timetable 
+ *      generation algoritm. It's efficency and corectness is reflected in
+ *      the result. 
+ *      The mark is a data structure that evaluates the quality of an 
+ *      individual.
+ *      $mark = array(int, int), where mark[0] is the number of hard 
+ *      constraints not satisfied and mark[1] is the number of soft 
+ *      constraints not satisfied.
+ *      Currently, this functions checks for following constraints:
+ *          - a teacher MUST NOT have pauses in a day, i.e. his teaching hours 
+ *          must be continuous
+ *          - a teacher SHOULD teach in the preferred moment of day
+ */
+
+function fitness($data, $individual){
+    $i = 0;
+    $ret = array(0, 0);
+    foreach($data['daySlots'] as $todaySlots){
+        $todayTeachers = array();
+        for($j = 0; $j < $todaySlots; $j++, $i++){
+            $slotTeacher = $data['teachers'][$individual[$i]];
+            if(isset($todayTeachers[$slotTeacher]) && 
+              ($j > 0 && $individual[$i-1] == $individual[$i])){ 
+                $ret[0]++;
+            }
+            $todayTeachers[$slotTeacher] = TRUE;
+        }
+    }
+    return $ret;
+}
+            
+
