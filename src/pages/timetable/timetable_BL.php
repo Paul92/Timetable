@@ -109,7 +109,7 @@ while ($day = mysqli_fetch_array($schedule)) {
     sscanf($day['endHour'], "%d", $endH);
 
     $data['startHour'][] = $startH;
-    $data['stopHour'][]  = $stopH;
+    $data['stopHour'][]  = $endH;
     $data['daySlots'][]  = $endH - $startH;
 }
 
