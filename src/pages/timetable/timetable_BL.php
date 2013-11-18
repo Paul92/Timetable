@@ -18,13 +18,17 @@
  *       $teacherPreference = array(preference_teacher1, ..., 
  *                                  preference_teachern),
  *       $daySlots = array(mondaySlots, ..., fridaySlots),
+ *       $startHour = array(...);
+ *       $endHour = array(...);
  *       bool $correlativeHours,
  * );
  *
  * $subjects holds subjects IDs (not subject names). For each $subjects[i]
  * exists a noOfSlots[i], which represent numberOfHours that subject[i] has
  * per week, and a teacher[i], which represent teacher needed for subject[i].
- * Also, teacher1, ..., teachern are teacher IDs.
+ * Also, teacher1, ..., teachern are teacher IDs. There is alse a startHour[i]
+ * and a endHour[i], which represents the start and the end hours for day i
+ * classes.
  *
  * $teacherPreference is a code (0, 1 or 2) that represents the teacher 
  * preference. 
