@@ -59,6 +59,8 @@ $data = array(
     'teachers'          => array(),
     'teacherPreference' => array(),
     'daySlots'          => array(),
+    'startHour'         => array(),
+    'stopHour'          => array(),
     'correlativeHours'  => FALSE,
 );
 $errors = array();
@@ -102,7 +104,9 @@ while ($day = mysqli_fetch_array($schedule)) {
     sscanf($day['startHour'], "%d", $startH);
     sscanf($day['endHour'], "%d", $endH);
 
-    $data['daySlots'][] = $endH - $startH;
+    $data['startHour'][] = $startH;
+    $data['stopHour'][]  = $stopH;
+    $data['daySlots'][]  = $endH - $startH;
 }
 
 //TODO: Correlative hours
