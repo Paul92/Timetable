@@ -83,20 +83,21 @@ if (empty($data['subjects'])) {
 
 
 //Teacher fetching
+//TODO: One subject may have more than 1 teacher
 foreach ($data['subjects'] as $subjectId) {
     $query = 'SELECT teacherId FROM teachersToSubject WHERE subjectId ="';
     $query.= $subjectId . '";';
-
+    
     $teachers = mysqli_query($DB, $query);
-    $subjectTeachers = array();
-    while ($teacher = mysqli_fetch_array($teachers)) {
-        $subjectTeachers[] = $teacher['teacherId'];
-    }
+    $noOfTeachers = mysqli_num_rows($teachers);
+    if($noOfTeachers > 1)
+        $errors[] = "Subject $subjectId has too many teachers";
+    else if($noOfTeachers == 0)
+        $errors[] = "Subject $subjectId has no teachers";
 
-    if (empty($subjectTeachers)) {
-        $errors[] = 'Subject ' . $subjectId . ' has no teachers';
-    }
-    $data['teachers'][] = $subjectTeachers;
+    $teachers = mysqli_fetch_array($teachers);
+
+    $data['teachers'][] = $teachers['teacherId'];
 }
 
 //Schedule fetching
@@ -115,7 +116,24 @@ while ($day = mysqli_fetch_array($schedule)) {
 
 //TODO: Correlative hours
 //TODO: Check if there are too many/few slots
-$ret = generate_generation($data, GENERATION_SIZE);
+
+//Checks
+
+$numberOfSlots = array_sum($data['noOfSlots']);
+$daySlots = array_sum($data['daySlots']);
+if($numberOfSlots != $daySlots)
+    $errors[] = "Too many/less time slots";
+
+
+$population = generate_generation($data, GENERATION_SIZE);
+
+$generationFitness = array();
+foreach($population as $generation){
+    $generationFitness[] = fitness($data, $generation);
+}
+var_dump($data);
+
+$ret = $generationFitness;
 
 //Pass data to VL
 if (isset($errors) && !empty($errors)) {
