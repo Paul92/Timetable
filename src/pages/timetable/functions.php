@@ -65,24 +65,58 @@
  * where $individualk is a timetable
  */
 
+/**
+ * int countScheduleSlots(mixed $db)
+ *
+ * @param mixed $db - mysqli object that represents database connection
+ *
+ * @return int slots - number of slots available in a week's schedule
+ */
+function countScheduleSlots($db){
+
+    $slotSize = 1; //Hardcoded
+
+    $query = "SELECT SUM(endHour - startHour) FROM schedule;";
+    $query = mysqli_query($db, $query);
+    $query = mysqli_fetch_array($query);
+    $query = $query[0] / 10000; //Needs more thinking
+
+    return $query / $slotSize;
+}
+
+/**
+ * int countSubjectSlots(mixed $db)
+ *
+ * @param mixed $db - mysqli object that represents database connection
+ *
+ * @return int slots - number of subject slots available in a week
+ */
+function countSubjectSlots($db){
+    $query = "SELECT SUM(hours) FROM subjects;";
+    $query = mysqli_query($db, $query);
+    $query = mysqli_fetch_array($query);
+    return $query[0];
+}
+
 
 
 /**
  * mixed generate_individual(mixed $data)
  *
- * @param mixed $data - data used for timetable generation, as described in
- *                      timetable_BL.php
+ * @param mixed $db - mysqli object that represents database connection
  *
  * @return mixed timetable - returns a randomly generated timetable, as 
  *                           documented at the beginning of this file
  */
-function generate($data) {
+function generate($db) {
 
     $timetable = array();
-    foreach ($data['noOfSlots'] as $key => $subjectSlots) {
-        while ($subjectSlots) {
-            $timetable[] = $data['subjects'][$key];
-            $subjectSlots--;
+    $query = "SELECT * FROM subjects;";
+    $query = mysqli_query($db, $query);
+
+    while($arr = mysqli_fetch_array($query)){
+        while($arr['hours']--){
+            $timetable[] = (int)$arr['subjectId'];
         }
     }
 
@@ -95,19 +129,18 @@ function generate($data) {
 /**
  * mixed generate_generation(mixed $data, int $generationSize)
  *
- * @param mixed $data - data used for timetable generation, as described in
- *                      timetable_BL.php
+ * @param mixed $db - mysqli object that represents database connection
  * @param int $generationSize - generation size
  *
  * @return mixed generation - returns a randomly generated generation, with
  *                            generationSize individuals, as documented at
  *                            the beginning of this file
  */
-function generate_generation($data, $generationSize) {
+function generate_generation($db, $generationSize) {
 
     $generation = array();
     for ($i = 0; $i < $generationSize; $i++) {
-        $generation[] = generate($data);
+        $generation[] = generate($db);
     }
 
     return $generation;
@@ -115,10 +148,9 @@ function generate_generation($data, $generationSize) {
 }
 
 /**
- * mixed fitness(mixed $data, mixed $individual)
+ * mixed fitness(mixed $db, mixed $individual)
  *
- * @param mixed $data - data used for timetable generation, as described in
- *                      timetable_BL.php
+ * @param mixed $db - mysqli object that represents database connection
  * @param mixed $individual - the individual for which to compute the fitness
  *                            value
  *
@@ -130,47 +162,49 @@ function generate_generation($data, $generationSize) {
  *      the result. 
  *      The mark is a data structure that evaluates the quality of an 
  *      individual.
- *      $mark = array(int, int), where mark[0] is the number of hard 
- *      constraints not satisfied and mark[1] is the number of soft 
+ *      $mark = array(int, int), where mark['hard'] is the number of hard 
+ *      constraints not satisfied and mark['soft'] is the number of soft 
  *      constraints not satisfied.
  *      Currently, this functions checks for following constraints:
  *          - a teacher MUST NOT have pauses in a day, i.e. his teaching hours 
  *          must be continuous
  *          - a teacher SHOULD teach in the preferred moment of day
+ *
+ * TODO: implement soft constraints
  */
 
-function fitness($data, $individual){
+function fitness($db, $individual){
+    $slotSize = 1; //Hardcoded
     $i = 0;
-    $ret = array(0, 0);
-    foreach($data['daySlots'] as $todaySlots){
+    $today = 0;
+    $ret = array('hard' => 0, 'soft' => 0);
+
+    $query = "SELECT (endHour - startHour)/(10000 * $slotSize) AS slots FROM schedule;";
+    $query = mysqli_query($db, $query);
+
+    while($todaySlots = (int)mysqli_fetch_array($query)['slots']){
+        unset($todayTeachers);
         $todayTeachers = array();
         for($j = 0; $j < $todaySlots; $j++, $i++){
-            $slotTeacher = $data['teachers'][$individual[$i]];
-            if(isset($todayTeachers[$slotTeacher]) && 
-              ($j > 0 && $individual[$i-1] == $individual[$i])){ 
-                $ret[0]++;
+            $currentSubject = $individual[$i];
+
+            $teacherQuery = "SELECT teacherId FROM teachersToSubject ";
+            $teacherQuery.= "WHERE subjectId = $currentSubject;";
+            $teacherQuery = mysqli_query($db, $teacherQuery);
+
+            $teacherId = (int)mysqli_fetch_array($teacherQuery)['teacherId'];
+
+            if(isset($todayTeachers[$teacherId]) && 
+              ($j > 0 && $lastTeacher != $teacherId)){ 
+                $ret['hard']++;
             }
-            $hour = $data['startHour'] + $j;
-            switch($data['teacherPreference']){
-                case 0:
-                    if($hour < 8  || $hour > 12)
-                        $ret[1]++;
-                    break;
-                case 1:
-                    if($hour < 12 || $hour > 16)
-                        $ret[1]++;
-                    break;
-                case 2:
-                    if($hour < 16 || $hour > 20)
-                        $ret[1]++;
-                    break;
-                default:
-                    die("Wrong value for teacher preference");
-            }
-            $todayTeachers[$slotTeacher] = TRUE;
+            $lastTeacher = $teacherId;
+            $todayTeachers[$teacherId] = TRUE;
         }
     }
-
+ 
     return $ret;
+
 }
+
 
