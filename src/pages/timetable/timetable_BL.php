@@ -57,81 +57,28 @@ require_once('pages/timetable/functions.php');
 
 const GENERATION_SIZE = 10;
 
-$data = array(
-    'subjects'          => array(),
-    'noOfSlots'         => array(),
-    'teachers'          => array(),
-    'teacherPreference' => array(),
-    'daySlots'          => array(),
-    'startHour'         => array(),
-    'stopHour'          => array(),
-    'correlativeHours'  => FALSE,
-);
-$errors = array();
+//checks
 
-//Subject fetching
-$query = 'SELECT subjectId, hours FROM subjects;';
-$subjects = mysqli_query($DB, $query);
-while ($subject = mysqli_fetch_array($subjects)) {
-    $data['subjects'][]  = (int)$subject['subjectId'];
-    $data['noOfSlots'][] = (int)$subject['hours'];
-}
-
-if (empty($data['subjects'])) {
-    $errors[] = 'No subjects';
-}
-
-
-//Teacher fetching
-//TODO: One subject may have more than 1 teacher
-foreach ($data['subjects'] as $subjectId) {
-    $query = 'SELECT teacherId FROM teachersToSubject WHERE subjectId ="';
-    $query.= $subjectId . '";';
-    
-    $teachers = mysqli_query($DB, $query);
-    $noOfTeachers = mysqli_num_rows($teachers);
-    if($noOfTeachers > 1)
-        $errors[] = "Subject $subjectId has too many teachers";
-    else if($noOfTeachers == 0)
-        $errors[] = "Subject $subjectId has no teachers";
-
-    $teachers = mysqli_fetch_array($teachers);
-
-    $data['teachers'][] = $teachers['teacherId'];
-}
-
-//Schedule fetching
-$query = 'SELECT * FROM schedule;';
-$schedule = mysqli_query($DB, $query);
-
-//TODO: A slot may be longer than an hour
-while ($day = mysqli_fetch_array($schedule)) {
-    sscanf($day['startHour'], "%d", $startH);
-    sscanf($day['endHour'], "%d", $endH);
-
-    $data['startHour'][] = $startH;
-    $data['stopHour'][]  = $endH;
-    $data['daySlots'][]  = $endH - $startH;
-}
-
-//TODO: Correlative hours
-//TODO: Check if there are too many/few slots
-
-//Checks
-
-$numberOfSlots = array_sum($data['noOfSlots']);
-$daySlots = array_sum($data['daySlots']);
-if($numberOfSlots != $daySlots)
+$noOfSlots = countScheduleSlots($DB);
+if($noOfSlots != countSubjectSlots($DB))
     $errors[] = "Too many/less time slots";
 
+//testing function
 
-$population = generate_generation($data, GENERATION_SIZE);
+function print_arr($arr){
+    foreach($arr as $element)
+        echo $element, ' ';
+    echo "\n";
+}
 
+$population = generate_generation($DB, GENERATION_SIZE);
 $generationFitness = array();
 foreach($population as $generation){
-    $generationFitness[] = fitness($data, $generation);
+    $generationFitness[] = fitness($DB, $generation);
+    var_dump(fitness($DB, $generation));
+    print_arr($generation);
+    echo "\n\n";
 }
-var_dump($data);
 
 $ret = $generationFitness;
 
