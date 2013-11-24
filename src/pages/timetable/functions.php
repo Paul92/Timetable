@@ -204,7 +204,44 @@ function fitness($db, $individual){
     }
  
     return $ret;
+}
 
+
+
+
+/**
+ * mixed parse(mixed $generation)
+ *
+ * @param mixed $db - mysqli object that represents database connection
+ * @param mixed $individual - an array that represents a generation
+ *
+ * @return mixed ret - an array that matches course names and slots for output
+ */
+function parse($db, $individual){
+    $slotSize = 1; //Hardcoded
+    $i = 0;
+    $today = 0;
+    $ret = array();
+
+    $query = "SELECT (endHour - startHour)/(10000 * $slotSize) AS slots FROM schedule;";
+    $query = mysqli_query($db, $query);
+
+    while($todaySlots = (int)mysqli_fetch_array($query)['slots']){
+        $todaySubjects = array();
+        for($j = 0; $j < $todaySlots; $j++, $i++){
+            $currentSubjectId = $individual[$i];
+            $currentSubjectName = "SELECT subjectName FROM subjects ";
+            $currentSubjectName.= "WHERE subjectId = $currentSubjectId;";
+            $currentSubjectName = mysqli_query($db, $currentSubjectName);
+            $currentSubjectName = mysqli_fetch_array($currentSubjectName);
+            $currentSubjectName = $currentSubjectName['subjectName'];
+
+            $todaySubjects[] = $currentSubjectName;
+        }
+        $ret[] = $todaySubjects;
+    }
+ 
+    return $ret;
 }
 
 
