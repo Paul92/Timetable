@@ -5,7 +5,7 @@
     echo '<table>';
     foreach ($data['teachers'] as $teacher) {
         echo '<tr><td> Teacher ', $teacher['teacherName'];
-        echo '<input type="checkbox" name="teachers[]" value="';
+        echo '<input type="radio" name="teachers[]" value="';
         echo $teacher['teacherId'], '"';
         if (array_search($teacher['teacherId'], $data['taughtBy']) !== FALSE) 
             echo ' checked';
