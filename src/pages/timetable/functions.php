@@ -98,6 +98,21 @@ function countSubjectSlots($db){
     return $query[0];
 }
 
+/**
+ * void swap(int &a, int &b)
+ *
+ * Function swaps 2 variables, by passing them as a reference
+ *
+ * @param int& a 
+ * @param int& b
+ *
+ * @return void
+ */
+function swap(&$a, &$b){
+    $temp = $a;
+    $a = $b;
+    $b = $temp;
+}
 
 
 /**
@@ -261,18 +276,44 @@ function crossover($individual_A, $individual_B){
     $individualSize = count($individual_A);
     $crossPoint = rand(1, $individualSize - 1);
 
-    $crossovered = array_slice($individual_A, 0, $crossPoint);
+    $child = array_slice($individual_A, 0, $crossPoint);
     $needed = array_slice($individual_A, $crossPoint);
 
     foreach($individual_B as $gene){
         if(($key = array_search($gene, $needed)) !== FALSE){
-            $crossovered[] = $gene;
+            $child[] = $gene;
             $needed[$key] = -1; //we do not need this subject anymore
                                 //-1 is a dummy (there can not be a subject
                                 //with id -1)
         }
     }
 
-    return $crossovered;
+    return $child;
 }
 
+/**
+ * The mutation probability is 1 in MUTATION_RATE individuals
+ */
+const MUTATION_RATE = 3;
+
+/**
+ * mixed mutate(mixed $individual)
+ *
+ * This function may (under some probabilty) perform a mutation to an 
+ * individual. This mutation consists in swapping 2 random subjects.
+ *
+ * @param mixed $individual - individual to mutate
+ *
+ * @return mixed $individual - individual recived as a parameter with a mutation
+ */
+function mutate($individual){
+    if(1 == rand(0, MUTATION_RATE)){
+        echo "MUTATED\n";
+        $individualSize = count($individual);
+        $a = rand(0, $individualSize);
+        $b = rand(0, $individualSize);
+        echo "$a, $b\n";
+        swap($individual[$a], $individual[$b]);
+    }
+    return $individual;
+}
