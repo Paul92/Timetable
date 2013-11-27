@@ -244,4 +244,21 @@ function parse($db, $individual){
     return $ret;
 }
 
-
+/**
+ * mixed crossover(mixed $individual_A, mixed $individual_B)
+ * 
+ * NOTE: this function assumes that $individual_A and $individual_B sizes are the same!
+ *       undefined behaviour otherwise
+ * 
+ * @param mixed $individual_A - an individual implied in crossover
+ * @param mixed $individual_A - an individual implied in crossover
+ *
+ * @return mixed $child - the result of the crossver operation between 
+ *                            $individual_A and $individual_B
+ */
+function crossover($individual_A, $individual_B){
+    
+    $crossPoint = rand(1, count($individual_A) - 1);
+    
+    //find a way to crossover individuals
+}
