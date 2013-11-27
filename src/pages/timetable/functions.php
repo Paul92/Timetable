@@ -254,11 +254,25 @@ function parse($db, $individual){
  * @param mixed $individual_A - an individual implied in crossover
  *
  * @return mixed $child - the result of the crossver operation between 
- *                            $individual_A and $individual_B
+ *                        $individual_A and $individual_B
  */
 function crossover($individual_A, $individual_B){
-    
-    $crossPoint = rand(1, count($individual_A) - 1);
-    
-    //find a way to crossover individuals
+
+    $individualSize = count($individual_A);
+    $crossPoint = rand(1, $individualSize - 1);
+
+    $crossovered = array_slice($individual_A, 0, $crossPoint);
+    $needed = array_slice($individual_A, $crossPoint);
+
+    foreach($individual_B as $gene){
+        if(($key = array_search($gene, $needed)) !== FALSE){
+            $crossovered[] = $gene;
+            $needed[$key] = -1; //we do not need this subject anymore
+                                //-1 is a dummy (there can not be a subject
+                                //with id -1)
+        }
+    }
+
+    return $crossovered;
 }
+
