@@ -94,7 +94,7 @@ function countScheduleSlots($db){
 function countSubjectSlots($db){
     $query = "SELECT SUM(hours) FROM subjects;";
     $SQL   = mysqli_query($db, $query);
-    $row   = mysqli_fetch_array($query);
+    $row   = mysqli_fetch_array($SQL);
     return $row[0];
 }
 
@@ -319,7 +319,8 @@ function mutate($individual){
  * The fitness threshold. For any fitness lower than this, the individual is
  * accepted.
  */
-const FITNESS_THRESHOLD = array('hard' => 0, 'soft' => 3);
+const FITNESS_THRESHOLD_HARD = 0;
+const FITNESS_THRESHOLD_SOFT = 3;
 
 /**
  * bool accepted(mixed $fitness)
@@ -330,8 +331,8 @@ const FITNESS_THRESHOLD = array('hard' => 0, 'soft' => 3);
  * @return bool accept  - returns wheter it is an acceptable fitness
  */
 function accepted($fitness){
-    if($fitness['hard'] <= FITNESS_THRESHOLD['hard'] and
-       $fitness['soft'] <= FITNESS_THRESHOLD['soft']){
+    if($fitness['hard'] <= FITNESS_THRESHOLD_HARD and
+       $fitness['soft'] <= FITNESS_THRESHOLD_SOFT){
            return TRUE;
     }
     return FALSE;
