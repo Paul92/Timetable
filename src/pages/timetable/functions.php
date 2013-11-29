@@ -317,3 +317,26 @@ function mutate($individual){
     }
     return $individual;
 }
+
+/**
+ * The fitness threshold. For any fitness lower than this, the individual is
+ * accepted.
+ */
+const FITNESS_THRESHOLD = array('hard' => 0, 'soft' => 3);
+
+/**
+ * bool accepted(mixed $fitness)
+ *
+ * @param mixed fitness - an individual's fitness, as returned by the fitness
+ *                        function
+ *
+ * @return bool accept  - returns wheter it is an acceptable fitness
+ */
+function accepted($fitness){
+    if($fitness['hard'] <= FITNESS_THRESHOLD['hard'] and
+       $fitness['soft'] <= FITNESS_THRESHOLD['soft']){
+           return TRUE;
+    }
+    return FALSE;
+}
+
