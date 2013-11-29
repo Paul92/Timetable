@@ -76,12 +76,12 @@ function countScheduleSlots($db){
 
     $slotSize = 1; //Hardcoded
 
-    $query = "SELECT SUM(endHour - startHour) FROM schedule;";
-    $query = mysqli_query($db, $query);
-    $query = mysqli_fetch_array($query);
-    $query = $query[0] / 10000; //Needs more thinking
+    $query     = "SELECT SUM(endHour - startHour) FROM schedule;";
+    $SQL       = mysqli_query($db, $query);
+    $row       = mysqli_fetch_array($SQL);
+    $noOfSlots = $row[0] / 10000; //Needs more thinking
 
-    return $query / $slotSize;
+    return $noOfSlots / $slotSize;
 }
 
 /**
@@ -93,9 +93,9 @@ function countScheduleSlots($db){
  */
 function countSubjectSlots($db){
     $query = "SELECT SUM(hours) FROM subjects;";
-    $query = mysqli_query($db, $query);
-    $query = mysqli_fetch_array($query);
-    return $query[0];
+    $SQL   = mysqli_query($db, $query);
+    $row   = mysqli_fetch_array($query);
+    return $row[0];
 }
 
 /**
@@ -126,12 +126,12 @@ function swap(&$a, &$b){
 function generate($db) {
 
     $timetable = array();
-    $query = "SELECT * FROM subjects;";
-    $query = mysqli_query($db, $query);
+    $query     = "SELECT * FROM subjects;";
+    $SQL       = mysqli_query($db, $query);
 
-    while($arr = mysqli_fetch_array($query)){
-        while($arr['hours']--){
-            $timetable[] = (int)$arr['subjectId'];
+    while($row = mysqli_fetch_array($SQL)){
+        while($row['hours']--){
+            $timetable[] = (int)$row['subjectId'];
         }
     }
 
@@ -195,9 +195,9 @@ function fitness($db, $individual){
     $ret = array('hard' => 0, 'soft' => 0);
 
     $query = "SELECT (endHour - startHour)/(10000 * $slotSize) AS slots FROM schedule;";
-    $query = mysqli_query($db, $query);
+    $SQL = mysqli_query($db, $query);
 
-    while($todaySlots = (int)mysqli_fetch_array($query)['slots']){
+    while($todaySlots = (int)mysqli_fetch_array($SQL)['slots']){
         unset($todayTeachers);
         $todayTeachers = array();
         for($j = 0; $j < $todaySlots; $j++, $i++){
@@ -205,9 +205,9 @@ function fitness($db, $individual){
 
             $teacherQuery = "SELECT teacherId FROM teachersToSubject ";
             $teacherQuery.= "WHERE subjectId = $currentSubject;";
-            $teacherQuery = mysqli_query($db, $teacherQuery);
+            $teacherSQL   = mysqli_query($db, $teacherQuery);
 
-            $teacherId = (int)mysqli_fetch_array($teacherQuery)['teacherId'];
+            $teacherId = (int)mysqli_fetch_array($teacherSQL)['teacherId'];
 
             if(isset($todayTeachers[$teacherId]) && 
               ($j > 0 && $lastTeacher != $teacherId)){ 
@@ -220,9 +220,6 @@ function fitness($db, $individual){
  
     return $ret;
 }
-
-
-
 
 /**
  * mixed parse(mixed $generation)
@@ -239,17 +236,17 @@ function parse($db, $individual){
     $ret = array();
 
     $query = "SELECT (endHour - startHour)/(10000 * $slotSize) AS slots FROM schedule;";
-    $query = mysqli_query($db, $query);
+    $SQL   = mysqli_query($db, $query);
 
-    while($todaySlots = (int)mysqli_fetch_array($query)['slots']){
+    while($todaySlots = (int)mysqli_fetch_array($SQL)['slots']){
         $todaySubjects = array();
         for($j = 0; $j < $todaySlots; $j++, $i++){
-            $currentSubjectId = $individual[$i];
-            $currentSubjectName = "SELECT subjectName FROM subjects ";
-            $currentSubjectName.= "WHERE subjectId = $currentSubjectId;";
-            $currentSubjectName = mysqli_query($db, $currentSubjectName);
-            $currentSubjectName = mysqli_fetch_array($currentSubjectName);
-            $currentSubjectName = $currentSubjectName['subjectName'];
+            $currentSubjectId    = $individual[$i];
+            $currentSubjectQuery = "SELECT subjectName FROM subjects ";
+            $currentSubjectQuery.= "WHERE subjectId = $currentSubjectId;";
+            $currentSubjectSQL   = mysqli_query($db, $currentSubjectQuery);
+            $currentSubjectRow   = mysqli_fetch_array($currentSubjectSQL);
+            $currentSubjectName  = $currentSubjectRow['subjectName'];
 
             $todaySubjects[] = $currentSubjectName;
         }
