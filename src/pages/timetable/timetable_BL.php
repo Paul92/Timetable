@@ -32,6 +32,25 @@ foreach($population as $generation){
     $generationFitness[] = fitness($DB, $generation);
 }
 
+while(!accepted($generationFitness[0])){
+    //random crossover
+    $a = rand(0, GENERATION_SIZE);
+    $b = rand(0, GENERATION_SIZE);
+    if($a != $b){
+        $newIndividual = crossover($population[$a], $population[$b]);
+        //check if it is better than it's parents
+    }
+
+    //mutation
+    $a = rand(0, GENERATION_SIZE);
+    $newIndividual = mutate($a);
+    //check if it is better that it's parent
+
+    //sort generation fitness
+}
+
+
+
 $ret = $generationFitness;
 $ret = parse($DB, $population[0]);
 
