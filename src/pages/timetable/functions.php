@@ -325,16 +325,34 @@ const FITNESS_THRESHOLD_SOFT = 3;
 /**
  * bool accepted(mixed $fitness)
  *
- * @param mixed fitness - an individual's fitness, as returned by the fitness
+ * @param mixed $fitness - an individual's fitness, as returned by the fitness
  *                        function
  *
- * @return bool accept  - returns wheter it is an acceptable fitness
+ * @return bool $accept  - returns wheter it is an acceptable fitness
  */
 function accepted($fitness){
     if($fitness['hard'] <= FITNESS_THRESHOLD_HARD and
        $fitness['soft'] <= FITNESS_THRESHOLD_SOFT){
            return TRUE;
     }
+    return FALSE;
+}
+
+/**
+ * bool fitness_compare(mixed $a, mixed $b)
+ *
+ * @param mixed $a - fitness a to compare
+ * @param mixed $b - fitness b to compare
+ *
+ * @return bool $better - return whether a is better than b or not
+ *                        note that the hard constraint is evaluated first and
+ *                        it is more important that the soft one.
+ */
+function fitness_compare($a, $b){
+    if($a['hard'] < $b['hard'])
+        return TRUE;
+    else if($a['hard'] == $b['hard'] && $a['soft'] < $b['soft'])
+        return TRUE;
     return FALSE;
 }
 
