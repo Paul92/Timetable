@@ -15,12 +15,11 @@ foreach($data['teachers'] as $teacher){
         while($subject = mysqli_fetch_array($subjectsTaught)){
             echo '<tr>';
             echo '<td style="width:300px">', $subject['subjectName'], '</td>';
-            echo '<td><button type="submit" name="removeSubject" ';
-            echo ' value="', $subject['subjectId'];
-            echo '">Remove</button></td>';
-            echo '<input type="hidden" name="teacherId" value="';
-            echo $teacher['teacherId'], '"/>';
-            echo '</tr>';
+            echo '<td><button type="submit" name="remove" ';
+            echo 'value="subjectId:', $subject['subjectId'];
+            echo ',teacherId:',$teacher['teacherId'];
+            echo '">Remove</button>';
+            echo '</td></tr>';
         }
         echo "</table>";
     }
