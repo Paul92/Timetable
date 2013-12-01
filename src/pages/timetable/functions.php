@@ -65,6 +65,20 @@
  * where $individualk is a timetable
  */
 
+
+/**
+ * The fitness threshold. For any fitness lower than this, the individual is
+ * accepted.
+ */
+const FITNESS_THRESHOLD_HARD = 0;
+const FITNESS_THRESHOLD_SOFT = 3;
+
+/**
+ * The mutation probability is 1 in MUTATION_RATE individuals
+ */
+const MUTATION_RATE = 3;
+
+
 /**
  * int countScheduleSlots(mixed $db)
  *
@@ -288,10 +302,6 @@ function crossover($individual_A, $individual_B){
     return $child;
 }
 
-/**
- * The mutation probability is 1 in MUTATION_RATE individuals
- */
-const MUTATION_RATE = 3;
 
 /**
  * mixed mutate(mixed $individual)
@@ -315,12 +325,6 @@ function mutate($individual){
     return $individual;
 }
 
-/**
- * The fitness threshold. For any fitness lower than this, the individual is
- * accepted.
- */
-const FITNESS_THRESHOLD_HARD = 0;
-const FITNESS_THRESHOLD_SOFT = 3;
 
 /**
  * bool accepted(mixed $fitness)
@@ -356,3 +360,15 @@ function fitness_compare($a, $b){
     return FALSE;
 }
 
+/**
+ * bool comp($a, $b)
+ *
+ * @param mixed $a - array($individual, $fitness)
+ * @param mixed $b - array($individual, $fitness)
+ *
+ * @return bool result - checks if $a fitness is greater than $b fitness.
+ *                       Used for sorting.
+ */
+function comp($a, $b){
+    return !fitness_compare($a['fitness'], $b['fitness']);
+}
