@@ -116,7 +116,7 @@ function swap(&$a, &$b){
 
 
 /**
- * mixed generate_individual(mixed $data)
+ * mixed generate(mixed $data)
  *
  * @param mixed $db - mysqli object that represents database connection
  *
