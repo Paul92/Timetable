@@ -26,34 +26,64 @@ function print_arr($arr){
     echo "\n";
 }
 
-$population = generate_generation($DB, GENERATION_SIZE);
-$generationFitness = array();
-foreach($population as $generation){
-    $generationFitness[] = fitness($DB, $generation);
+//end of testing function
+
+$generation = array();
+for($i = 0; $i < GENERATION_SIZE; $i++){
+    $individual = generate($DB);
+    $individualFitness = fitness($DB, $individual);
+    $element    = array(
+        'individual' => $individual, 
+        'fitness'    => $individualFitness
+    );
+    $generation[] = $element;
 }
 
-while(!accepted($generationFitness[0])){
+usort($generation, "comp");
+
+while(!accepted($generation[0]['fitness'])){
     //random crossover
-    $a = rand(0, GENERATION_SIZE);
-    $b = rand(0, GENERATION_SIZE);
+    $a = rand(0, GENERATION_SIZE-1);
+    $b = rand(0, GENERATION_SIZE-1);
     if($a != $b){
-        $newIndividual = crossover($population[$a], $population[$b]);
-        //check if it is better than it's parents
+        $newIndividual = crossover($generation[$a]['individual'],
+                                   $generation[$b]['individual']);
+        $newIndividualFitness = fitness($DB, $newIndividual);
+        $aFitness = $generation[$a]['fitness'];
+        $bFitness = $generation[$b]['fitness'];
+        if(!fitness_compare($aFitness, $bFitness)){
+            if(!fitness_compare($aFitness, $newIndividualFitness)){
+                $generation[$a]['individual'] = $newIndividual;
+                $generation[$a]['fitness']    = $newIndividualFitness;
+            }else{
+                $generation[$b]['individual'] = $newIndividual;
+                $generation[$b]['fitness']    = $newIndividualFitness;
+            }
+        }else{
+            if(!fitness_compare($bFitness, $newIndividualFitness)){
+                $generation[$b]['individual'] = $newIndividual;
+                $generation[$b]['fitness']    = $newIndividualFitness;
+            }else{
+                $generation[$a]['individual'] = $newIndividual;
+                $generation[$a]['fitness']    = $newIndividualFitness;
+            }
+        }
     }
 
     //mutation
-    $a = rand(0, GENERATION_SIZE);
-    $newIndividual = mutate($a);
-    //check if it is better that it's parent
+    $a = rand(0, GENERATION_SIZE-1);
+    $newIndividual = mutate($generation[$a]['individual']);
+    $newIndividualFitness = fitness($DB, $newIndividual);
+    if(fitness_compare($newIndividualFitness, $generation[$a]['fitness'])){
+        $generation[$a]['individual'] = $newIndividual;
+        $generation[$a]['fitness']    = $newIndividualFitness;
+    }
 
-    //sort generation fitness
+    usort($generation, "comp");
 }
 
 
-
-$ret = $generationFitness;
-$ret = parse($DB, $population[0]);
-
+$ret = parse($DB, $generation[0]['individual']);
 //Pass data to VL
 if (isset($errors) && !empty($errors)) {
     return $errors;
