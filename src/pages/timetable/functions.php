@@ -262,7 +262,16 @@ function parse($db, $individual){
             $currentSubjectRow   = mysqli_fetch_array($currentSubjectSQL);
             $currentSubjectName  = $currentSubjectRow['subjectName'];
 
-            $todaySubjects[] = $currentSubjectName;
+            $currentTeacherQuery = "SELECT teacherName FROM teachers ";
+            $currentTeacherQuery.= "WHERE teacherId = (";
+            $currentTeacherQuery.= "SELECT teacherId FROM teachersToSubject ";
+            $currentTeacherQuery.= "WHERE subjectId = $currentSubjectId);";
+            $currentTeacherSQL   = mysqli_query($db, $currentTeacherQuery);
+            $currentTeacherRow   = mysqli_fetch_array($currentTeacherSQL);
+            $currentTeacherName  = $currentTeacherRow['teacherName'];
+
+            $todaySubjects['subject'] = $currentSubjectName;
+            $todaySubjects['teacher'] = $currentTeacherName;
         }
         $ret[] = $todaySubjects;
     }
