@@ -270,8 +270,8 @@ function parse($db, $individual){
             $currentTeacherRow   = mysqli_fetch_array($currentTeacherSQL);
             $currentTeacherName  = $currentTeacherRow['teacherName'];
 
-            $todaySubjects['subject'] = $currentSubjectName;
-            $todaySubjects['teacher'] = $currentTeacherName;
+            $todaySubjects['subject'][] = $currentSubjectName;
+            $todaySubjects['teacher'][] = $currentTeacherName;
         }
         $ret[] = $todaySubjects;
     }
