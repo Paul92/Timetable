@@ -220,8 +220,8 @@ function fitness($db, $individual){
             $teacherQuery = "SELECT teacherId FROM teachersToSubject ";
             $teacherQuery.= "WHERE subjectId = $currentSubject;";
             $teacherSQL   = mysqli_query($db, $teacherQuery);
-
-            $teacherId = (int)mysqli_fetch_array($teacherSQL)['teacherId'];
+            $teacherIdArray = mysqli_fetch_array($teacherSQL);
+            $teacherId = (int)$teacherIdArray['teacherId'];
 
             if(isset($todayTeachers[$teacherId]) && 
               ($j > 0 && $lastTeacher != $teacherId)){ 
@@ -315,11 +315,9 @@ function crossover($individual_A, $individual_B){
  */
 function mutate($individual){
     if(1 == rand(0, MUTATION_RATE)){
-        echo "MUTATED\n";
         $individualSize = count($individual);
-        $a = rand(0, $individualSize);
-        $b = rand(0, $individualSize);
-        echo "$a, $b\n";
+        $a = rand(0, $individualSize - 1);
+        $b = rand(0, $individualSize - 1);
         swap($individual[$a], $individual[$b]);
     }
     return $individual;
