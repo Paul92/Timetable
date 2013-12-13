@@ -8,7 +8,7 @@ echo "<input type='text' id='subjectName' name='subjectName' />\n";
 echo "<br>";
 while ($teacher = mysqli_fetch_array($data['teachers'])) {
     echo "Teacher ", $teacher['teacherName'];
-    echo "<input type='checkbox' name='teachers[]' value='", $teacher['teacherId'], "'/>";
+    echo "<input type='radio' name='teachers[]' value='", $teacher['teacherId'], "'/>";
     echo "<br>";
 }
 echo "<input type='submit' name='submit' value='Submit' />\n";
