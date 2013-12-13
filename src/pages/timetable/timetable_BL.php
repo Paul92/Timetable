@@ -9,14 +9,12 @@ require_once(DATABASE_MODULE);
 $DB = connect();
 
 require_once('pages/timetable/functions.php');
+require_once('pages/schedule/functions.php');
 
 const GENERATION_SIZE = 10;
 
 //checks
 
-$noOfSlots = countScheduleSlots($DB);
-if($noOfSlots != countSubjectSlots($DB))
-    $errors[] = "Too many/less time slots";
 
 //testing function
 
@@ -26,6 +24,7 @@ function print_arr($arr){
     echo "\n";
 }
 
+averageSlots($DB);
 //end of testing function
 
 $generation = array();
@@ -83,11 +82,11 @@ while(!accepted($generation[0]['fitness'])){
 }
 
 
-$ret = parse($DB, $generation[0]['individual']);
+$timetable = parse($DB, $generation[0]['individual']);
 //Pass data to VL
 if (isset($errors) && !empty($errors)) {
     return $errors;
 } else {
-    return $ret;
+    return $timetable;
 }
 

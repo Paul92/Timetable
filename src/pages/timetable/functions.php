@@ -80,25 +80,6 @@ const MUTATION_RATE = 3;
 
 
 /**
- * int countScheduleSlots(mixed $db)
- *
- * @param mixed $db - mysqli object that represents database connection
- *
- * @return int slots - number of slots available in a week's schedule
- */
-function countScheduleSlots($db){
-
-    $slotSize = 1; //Hardcoded
-
-    $query     = "SELECT SUM(endHour - startHour) FROM schedule;";
-    $SQL       = mysqli_query($db, $query);
-    $row       = mysqli_fetch_array($SQL);
-    $noOfSlots = $row[0] / 10000; //Needs more thinking
-
-    return $noOfSlots / $slotSize;
-}
-
-/**
  * int countSubjectSlots(mixed $db)
  *
  * @param mixed $db - mysqli object that represents database connection
@@ -111,6 +92,38 @@ function countSubjectSlots($db){
     $row   = mysqli_fetch_array($SQL);
     return $row[0];
 }
+
+
+/**
+ * int averageSlots(mixed $db)
+ *
+ * @param mixed $db - mysqli object that represents database connection
+ *
+ * @return int slots - average subject slots a day
+ */
+function averageSlots($db){
+    $query = "SELECT SUM(hours) as totalSlots FROM subjects;";
+    $SQL   = mysqli_query($db, $query);
+    $row   = mysqli_fetch_array($SQL);
+    $noOfSlots = $row['totalSlots'];
+
+    $daySlots = array(); //implement forbidden days
+    $noOfDays = 5;
+
+    $average = (int)($noOfSlots/$noOfDays);
+    $rest    = $noOfSlots - $average * $noOfDays;
+    for($i = 0; $i < $noOfDays; $i++){
+        $daySlots[$i] = $average;
+        if($rest){
+            $daySlots[$i]++;
+            $rest--;
+        }
+    }
+
+    shuffle($daySlots);
+    return $daySlots;
+}
+
 
 /**
  * void swap(int &a, int &b)
@@ -176,6 +189,7 @@ function generate_generation($db, $generationSize) {
 
 }
 
+
 /**
  * mixed fitness(mixed $db, mixed $individual)
  *
@@ -203,18 +217,16 @@ function generate_generation($db, $generationSize) {
  */
 
 function fitness($db, $individual){
-    $slotSize = 1; //Hardcoded
-    $i = 0;
-    $today = 0;
+    $slotSize = getSlotSize();
     $ret = array('hard' => 0, 'soft' => 0);
+    $days = averageSlots($db);
+    $noOfDays = count($days);
+    $i = 0;
 
-    $query = "SELECT (endHour - startHour)/(10000 * $slotSize) AS slots FROM schedule;";
-    $SQL = mysqli_query($db, $query);
-
-    while($todaySlots = (int)mysqli_fetch_array($SQL)['slots']){
+    for($today = 0; $today < $noOfDays; $today++){
         unset($todayTeachers);
         $todayTeachers = array();
-        for($j = 0; $j < $todaySlots; $j++, $i++){
+        for($j = 0; $j < $days[$today]; $j++, $i++){
             $currentSubject = $individual[$i];
 
             $teacherQuery = "SELECT teacherId FROM teachersToSubject ";
@@ -231,7 +243,7 @@ function fitness($db, $individual){
             $todayTeachers[$teacherId] = TRUE;
         }
     }
- 
+
     return $ret;
 }
 
@@ -249,10 +261,9 @@ function parse($db, $individual){
     $today = 0;
     $ret = array();
 
-    $query = "SELECT (endHour - startHour)/(10000 * $slotSize) AS slots FROM schedule;";
-    $SQL   = mysqli_query($db, $query);
+    $weekSlots = averageSlots($db);
 
-    while($todaySlots = (int)mysqli_fetch_array($SQL)['slots']){
+    foreach($weekSlots as $todaySlots){
         $todaySubjects = array();
         for($j = 0; $j < $todaySlots; $j++, $i++){
             $currentSubjectId    = $individual[$i];
@@ -270,11 +281,23 @@ function parse($db, $individual){
             $currentTeacherRow   = mysqli_fetch_array($currentTeacherSQL);
             $currentTeacherName  = $currentTeacherRow['teacherName'];
 
-            $todaySubjects['subject'][] = $currentSubjectName;
-            $todaySubjects['teacher'][] = $currentTeacherName;
+            $course = array();
+            $course['startHour'] = "NYI";
+            $course['endHour']   = "NYI";
+            $course['teacher']   = $currentTeacherName;
+            $course['subject']   = $currentSubjectName;
+
+            $todaySubjects[]     = $course;
         }
         $ret[] = $todaySubjects;
     }
+
+    $minHourQuery = "SELECT MIN(startHour) as minHour FROM schedule;";
+    $SQL          = mysqli_query($db, $minHourQuery);
+    $minHour      = mysqli_fetch_array($SQL)['minHour'];
+
+
+    //TODO: find max hour as startHour+n*slotSize and create the array
  
     return $ret;
 }
