@@ -44,7 +44,7 @@ function getSlotSize(){
     $query = "SELECT * FROM slotSize;";
     $SQL   = mysqli_query($DB, $query);
     $slotSize = mysqli_fetch_array($SQL)['slotLength'];
-    return (int)$slotSize;
+    return $slotSize;
 }
 
 /**

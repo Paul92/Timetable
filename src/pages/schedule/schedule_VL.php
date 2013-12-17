@@ -4,6 +4,7 @@ if (isset($data['errors'])) {
         echo $error, '</br>';
     }
 }
+var_dump($data['slotSize']);
 ?>
 <form method="POST">
 
@@ -21,7 +22,7 @@ while($day = mysqli_fetch_array($data['schedule'])){
 
 </table>
 <label for="slotLength" name="slotLengthLabel">Slot length:</label>
-<input type="text" name="slotSize" size=3 value="<?php echo $data['slotSize']; ?>"/>
+<input type="text" name="slotSize" size=6 value="<?php echo $data['slotSize']; ?>"/>
 <input type="submit" name="reset" value="Reset"/>
 <input type="submit" name="submit" value="Submit"/>
 </form>
