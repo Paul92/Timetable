@@ -304,7 +304,7 @@ function parse($db, $individual){
 
             $course = array();
 
-            $course['startHour'] = computeStartHour($db, $todayId, $j);
+            $course['startHour'] = computeStartHour($db, $todayId+1, $j);
             $course['endHour']   = "";
             $course['teacher']   = $currentTeacherName;
             $course['subject']   = $currentSubjectName;
@@ -418,3 +418,19 @@ function fitness_compare($a, $b){
 function comp($a, $b){
     return !fitness_compare($a['fitness'], $b['fitness']);
 }
+
+/**
+ * string getDayName(mixed $db, int $dayId)
+ *
+ * @param mixed $db  - mysqli object that represents database connection
+ * @param int $dayId - day id for which to find name
+ *
+ * @return string name - day name
+ */
+function getDayName($db, $dayId){
+    $query = "SELECT dayName FROM schedule WHERE dayId=$dayId;";
+    $SQL   = mysqli_query($db, $query);
+    $dayName = mysqli_fetch_array($SQL)['dayName'];
+    return $dayName;
+}
+
