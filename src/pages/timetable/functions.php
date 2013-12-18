@@ -248,6 +248,38 @@ function fitness($db, $individual){
 }
 
 /**
+ * string computeStartHour(mixed $db, int $day, int $slot)
+ *
+ * @param mixed $db - mysqli object that represents database connection
+ * @param int $day  - day id
+ * @param int $slot - slot number in $day day
+ *
+ * @return string time - the time of start
+ */
+function computeStartHour($db, $day, $slot){
+
+    $slotSizeQuery = "SELECT * FROM slotSize;";
+    $slotSizeSQL   = mysqli_query($db, $slotSizeQuery);
+    $slotSize      = mysqli_fetch_array($slotSizeSQL)['slotLength'];
+
+    $timeAdder = "00:00:00";
+    while($slot--){
+        $timeAdderQuery = "SELECT ADDTIME('$timeAdder', '$slotSize') AS time;";
+        $timeAdderSQL   = mysqli_query($db, $timeAdderQuery);
+        $timeAdder      = mysqli_fetch_array($timeAdderSQL)['time'];
+    }
+    $slotSize       = $timeAdder;
+
+    $timeQuery = "SELECT ADDTIME(startHour, '$slotSize') AS time ";
+    $timeQuery.= "FROM schedule WHERE dayId = $day;"; 
+    $timeSQL   = mysqli_query($db, $timeQuery);
+    $time      = mysqli_fetch_array($timeSQL)['time'];
+
+    return $time;
+}
+
+
+/**
  * mixed parse(mixed $generation)
  *
  * @param mixed $db - mysqli object that represents database connection
@@ -263,7 +295,7 @@ function parse($db, $individual){
 
     $weekSlots = averageSlots($db);
 
-    foreach($weekSlots as $todaySlots){
+    foreach($weekSlots as $todayId => $todaySlots){
         $todaySubjects = array();
         for($j = 0; $j < $todaySlots; $j++, $i++){
             $currentSubjectId    = $individual[$i];
@@ -282,8 +314,9 @@ function parse($db, $individual){
             $currentTeacherName  = $currentTeacherRow['teacherName'];
 
             $course = array();
-            $course['startHour'] = "NYI";
-            $course['endHour']   = "NYI";
+
+            $course['startHour'] = computeStartHour($db, $todayId, $j);
+            $course['endHour']   = "";
             $course['teacher']   = $currentTeacherName;
             $course['subject']   = $currentSubjectName;
 
@@ -292,13 +325,7 @@ function parse($db, $individual){
         $ret[] = $todaySubjects;
     }
 
-    $minHourQuery = "SELECT MIN(startHour) as minHour FROM schedule;";
-    $SQL          = mysqli_query($db, $minHourQuery);
-    $minHour      = mysqli_fetch_array($SQL)['minHour'];
 
-
-    //TODO: find max hour as startHour+n*slotSize and create the array
- 
     return $ret;
 }
 
