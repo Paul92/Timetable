@@ -11,22 +11,18 @@
  * slot (a linear search will do).
  *
  * 2. After first generation, the evolving process should start. This is 
- *    accomplished by 3 genetic operations:
- *    - reproduction
+ *    accomplished by 2 genetic operations:
  *    - crossover
  *    - mutation
  *
- * 2.1. Reproduction
- *    - is just a copy of an individual
- *
- * 2.2. Crossover
+ * 2.1. Crossover
  *    - take 2 individuals that are going to reproduce
  *    - select a random crossover point, spliting individuals A and B into 4
  *      parts: A1, A2, B1, B2
  *    - crossover them
  *    - the 2 new individuals will look like this: A1B2, B1A2
  *
- * 2.3. Mutation
+ * 2.1. Mutation
  *    - randomly change an individual's attribute
  *
  * 3. Fitness
@@ -47,22 +43,21 @@
  *    possible. 
  *
  * NOTES:
- *    - after an evolution step (2.2, 2.3), the new individual should not be 
+ *    - after an evolution step (2.1, 2.2), the new individual should not be 
  *    added to individual's list if it has a smaller mark
  *
  * The evolving process should stop when an acceptable individual is found.
  *
- * The timetable data structure:
+ * The individual data structure:
  *
- * $timetable = array(slot1, slot2, ..., slotn);
+ * $individual = array(slot1, slot2, ..., slotn);
  *  , where slot1, ..., slotn represents the subject ID taken in that slot.
  *  the first k slots represents monday slots, where k is the number of slots
- *  from monday. Simillar for other days. The size of $timetable MUST be equal
+ *  from monday. Simillar for other days. The size of $individual MUST be equal
  *  with the number of slots in a week.
  *
- * A generation is a array of timetables, each one being an individual.
+ * A generation is a array of individuals.
  * $generation = array($individual1, ..., $individualn),
- * where $individualk is a timetable
  */
 
 
@@ -277,7 +272,6 @@ function computeStartHour($db, $day, $slot){
  * @return mixed ret - an array that matches course names and slots for output
  */
 function parse($db, $individual){
-    $slotSize = 1; //Hardcoded
     $i = 0;
     $today = 0;
     $ret = array();
@@ -305,7 +299,6 @@ function parse($db, $individual){
             $course = array();
 
             $course['startHour'] = computeStartHour($db, $todayId+1, $j);
-            $course['endHour']   = "";
             $course['teacher']   = $currentTeacherName;
             $course['subject']   = $currentSubjectName;
 
@@ -313,7 +306,6 @@ function parse($db, $individual){
         }
         $ret[] = $todaySubjects;
     }
-
 
     return $ret;
 }
