@@ -258,20 +258,9 @@ function fitness($db, $individual){
  */
 function computeStartHour($db, $day, $slot){
 
-    $slotSizeQuery = "SELECT * FROM slotSize;";
-    $slotSizeSQL   = mysqli_query($db, $slotSizeQuery);
-    $slotSize      = mysqli_fetch_array($slotSizeSQL)['slotLength'];
-
-    $timeAdder = "00:00:00";
-    while($slot--){
-        $timeAdderQuery = "SELECT ADDTIME('$timeAdder', '$slotSize') AS time;";
-        $timeAdderSQL   = mysqli_query($db, $timeAdderQuery);
-        $timeAdder      = mysqli_fetch_array($timeAdderSQL)['time'];
-    }
-    $slotSize       = $timeAdder;
-
-    $timeQuery = "SELECT ADDTIME(startHour, '$slotSize') AS time ";
-    $timeQuery.= "FROM schedule WHERE dayId = $day;"; 
+    $timeQuery = "SELECT ADDTIME(startHour, ";
+    $timeQuery.= "SEC_TO_TIME(TIME_TO_SEC(slotLength) * $slot)) ";
+    $timeQuery.= "AS time FROM schedule, slotSize WHERE dayId=$day;";
     $timeSQL   = mysqli_query($db, $timeQuery);
     $time      = mysqli_fetch_array($timeSQL)['time'];
 
