@@ -5,18 +5,37 @@ if (isset($errors)) {
     }
 }
 
-$timetable = $data;
+$timetable = $data['timetable'];
+$dayNames  = $data['dayNames'];
 
-echo "<table>\n";
-foreach($timetable as $day){
+$ok = true;
+$i = 0;
+
+echo "<table border='1'>\n";
+echo "<tr>";
+foreach($timetable as $dayId => $course){
+    echo "<td> $dayNames[$dayId] </td>";
+}
+echo "</tr>";
+
+while($ok){
+    $ok = false;
     echo "<tr>\n";
-    foreach($day as $course){
-        echo '<td>', $course['startHour'], "</td>\n";
-        echo '<td>', $course['endHour'], "</td>\n";
-        echo '<td>', $course['subject'], "</td>\n";
-        echo '<td>', $course['teacher'], "</td>\n";
+    foreach($timetable as $day){
+        if(isset($day[$i])){
+            $ok = true;
+            $course = $day[$i];
+            echo '<td>', $course['subject'];
+            echo '<br>', $course['startHour'];
+            echo '<br>', $course['teacher'], "</td>\n";
+        }
     }
+    $i++;
     echo "</tr>\n";
 }
+echo "</table>";
+
+
+
 
 
