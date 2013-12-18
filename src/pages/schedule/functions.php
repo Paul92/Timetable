@@ -29,7 +29,7 @@ function getSchedule(){
 function updateSchedule($startH, $dayId){
     $DB = connect();
     $query = "UPDATE ".SCHEDULE_TABLE." SET ";
-    $query.= "startHour='" . $startH."', ";
+    $query.= "startHour='" . $startH."' ";
     $query.= "WHERE dayId='".$dayId."';";
     mysqli_query($DB, $query);
 }
