@@ -13,20 +13,6 @@ require_once('pages/schedule/functions.php');
 
 const GENERATION_SIZE = 10;
 
-//checks
-
-
-//testing function
-
-function print_arr($arr){
-    foreach($arr as $element)
-        echo $element, ' ';
-    echo "\n";
-}
-
-averageSlots($DB);
-//end of testing function
-
 $generation = array();
 for($i = 0; $i < GENERATION_SIZE; $i++){
     $individual = generate($DB);
@@ -83,10 +69,16 @@ while(!accepted($generation[0]['fitness'])){
 
 
 $timetable = parse($DB, $generation[0]['individual']);
+
+$dayNames = array();
+foreach($timetable as $dayId => $value)
+    $dayNames[$dayId] = getDayName($DB, $dayId+1);
+
 //Pass data to VL
 if (isset($errors) && !empty($errors)) {
     return $errors;
 } else {
-    return $timetable;
+    return array('timetable' => $timetable,
+                 'dayNames'  => $dayNames);
 }
 
