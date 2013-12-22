@@ -57,7 +57,6 @@ function getSlotSize(){
 function updateSlotSize($slotSize){
     $DB = connect();
     $query = "UPDATE slotSize SET slotLength='".$slotSize."';";
-    echo $query;
     mysqli_query($DB, $query);
 }
 
