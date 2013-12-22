@@ -4,7 +4,6 @@ if (isset($data['errors'])) {
         echo $error, '</br>';
     }
 }
-var_dump($data['slotSize']);
 ?>
 <form method="POST">
 
