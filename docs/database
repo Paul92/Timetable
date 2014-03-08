@@ -1,8 +1,8 @@
--- MySQL dump 10.14  Distrib 5.5.32-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.14  Distrib 5.5.35-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: timetable
 -- ------------------------------------------------------
--- Server version	5.5.32-MariaDB-log
+-- Server version	5.5.35-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -26,7 +26,7 @@ CREATE TABLE `courses` (
   `courseId` int(3) NOT NULL AUTO_INCREMENT,
   `courseName` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`courseId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,6 +35,7 @@ CREATE TABLE `courses` (
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
+INSERT INTO `courses` VALUES (5,'Rock'),(6,'Math'),(7,'New'),(8,'fd');
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -49,9 +50,8 @@ CREATE TABLE `schedule` (
   `dayId` int(1) NOT NULL AUTO_INCREMENT,
   `dayName` varchar(15) DEFAULT NULL,
   `startHour` time DEFAULT '08:00:00',
-  `endHour` time DEFAULT '15:00:00',
   PRIMARY KEY (`dayId`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,8 +60,31 @@ CREATE TABLE `schedule` (
 
 LOCK TABLES `schedule` WRITE;
 /*!40000 ALTER TABLE `schedule` DISABLE KEYS */;
-INSERT INTO `schedule` VALUES (1,'Monday','08:00:00','15:00:00'),(2,'Tuesday','08:00:00','15:00:00'),(3,'Wednesday','08:00:00','15:00:00'),(4,'Thursday','08:00:00','15:00:00'),(5,'Friday','08:00:00','15:00:00'),(6,'Saturday','08:00:00','15:00:00'),(7,'Sunday','08:00:00','15:00:00');
+INSERT INTO `schedule` VALUES (1,'Monday','09:30:00'),(2,'Tuesday','08:00:00'),(3,'Wednesday','08:00:00'),(4,'Thursday','08:00:00'),(5,'Friday','08:00:00');
 /*!40000 ALTER TABLE `schedule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `slotSize`
+--
+
+DROP TABLE IF EXISTS `slotSize`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `slotSize` (
+  `slotLength` time NOT NULL DEFAULT '00:00:00',
+  PRIMARY KEY (`slotLength`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `slotSize`
+--
+
+LOCK TABLES `slotSize` WRITE;
+/*!40000 ALTER TABLE `slotSize` DISABLE KEYS */;
+INSERT INTO `slotSize` VALUES ('01:30:00');
+/*!40000 ALTER TABLE `slotSize` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -75,10 +98,11 @@ CREATE TABLE `subjects` (
   `subjectId` int(11) NOT NULL AUTO_INCREMENT,
   `subjectName` varchar(30) DEFAULT NULL,
   `courseId` int(3) DEFAULT NULL,
+  `hours` int(5) DEFAULT '4',
   PRIMARY KEY (`subjectId`),
   KEY `courseId` (`courseId`),
   CONSTRAINT `subjects_ibfk_1` FOREIGN KEY (`courseId`) REFERENCES `courses` (`courseId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,6 +111,7 @@ CREATE TABLE `subjects` (
 
 LOCK TABLES `subjects` WRITE;
 /*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
+INSERT INTO `subjects` VALUES (11,'Practice',6,10),(13,'Bla',7,6),(14,'fds',8,4),(15,'New2',5,4);
 /*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,7 +126,7 @@ CREATE TABLE `teachers` (
   `teacherId` int(3) NOT NULL AUTO_INCREMENT,
   `teacherName` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`teacherId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -110,6 +135,7 @@ CREATE TABLE `teachers` (
 
 LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
+INSERT INTO `teachers` VALUES (13,'ForthTeacher'),(14,'FifthTeacher'),(15,'SixthTeacher'),(16,'Bla');
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -136,6 +162,7 @@ CREATE TABLE `teachersToSubject` (
 
 LOCK TABLES `teachersToSubject` WRITE;
 /*!40000 ALTER TABLE `teachersToSubject` DISABLE KEYS */;
+INSERT INTO `teachersToSubject` VALUES (13,14),(13,15),(14,11),(14,13);
 /*!40000 ALTER TABLE `teachersToSubject` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -148,4 +175,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-09-08 23:53:28
+-- Dump completed on 2014-03-09  1:10:53
